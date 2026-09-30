@@ -1,0 +1,33 @@
+name: feri-nepal
+
+x-local-supabase-access: &local-supabase-access
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+
+services:
+  migrate:
+    build:
+      context: .
+      target: builder
+    command: ["pnpm", "--filter", "@feri/database", "migrate:deploy"]
+    env_file: .env
+    environment:
+      DIRECT_URL: postgresql://postgres:postgres@host.docker.internal:54322/postgres
+    <<: *local-supabase-access
+    restart: "no"
+
+  web:
+    build:
+      context: .
+      target: runner
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@host.docker.internal:54322/postgres
+      SUPABASE_INTERNAL_URL: http://host.docker.internal:54321
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    <<: *local-supabase-access
+    restart: unless-stopped
