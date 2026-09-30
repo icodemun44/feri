@@ -1,217 +1,201 @@
-# Product Requirements Document — Feri Nepal
+# Product Requirements Document - Feri Nepal
 
-**Brand:** Feri Nepal (short/handle: **Ferinep**)
-**Course:** PRG100 — System Analysis and Design, Westcliff University
+**Brand:** Feri Nepal (short name and handle: Ferinep). "Feri" means "again" in Nepali.
+**Course:** PRG100 - System Analysis and Design, Westcliff University
 **Group:** Vinted
-**Status:** Draft v3
-**Last updated:** 2026-09-30
+**Status:** Draft v4 (foundation built)
+**Last updated:** 2026-10-01
 
-> Note: this PRD carries forward the scope, feature list, and cost baseline from the Week 2 VCS document (12 KLOC / 141 FP / COCOMO ~32.6 person-months) and the Week 4 UML class diagram / Week 5 ER diagram, translated into a buildable Next.js + Supabase + Prisma product spec.
+This PRD carries forward the scope, feature list and cost baseline from the Week 2 VCS document, the Week 4 UML class diagram and the Week 5 ER diagram, and translates them into a buildable Next.js, Supabase and Prisma product. The Week 4 "Vendor" entity is called **Seller** everywhere in the product and code.
 
 ---
 
 ## 1. Overview
 
-**Feri Nepal** ("feri" — Nepali for "again") is a peer-to-peer thrift marketplace where everyday users can buy and sell second-hand clothes, watches, bags, tech, and other used goods. Any registered user can apply to become a **Vendor** (seller); an **Admin** manually reviews and calls each applicant to verify identity/business details before activating the vendor account. The platform is a standard e-commerce architecture: catalog, cart, checkout, orders, payments, reviews — scoped down to three roles (Buyer, Vendor, Admin) with clear permission boundaries.
+Feri Nepal is a peer-to-peer thrift marketplace where people buy and sell pre-loved clothes, watches, bags, tech and other goods. Any registered user can apply to become a **Seller**. An **Admin** reviews each application, calls the applicant on the phone number they gave to verify their details, and then approves or rejects it. The platform follows a standard e-commerce shape: catalog, cart, checkout, orders, payments and reviews, for three roles: Buyer, Seller and Admin.
 
-### 1.1 Problem Statement
-Second-hand goods trading in the target market (Nepal) is fragmented across informal channels (Facebook groups, word-of-mouth) with no trust layer, no standard checkout, and no seller accountability. Buyers can't verify sellers; sellers have no storefront or reputation system.
+### 1.1 Problem statement
+
+Second-hand trading in Nepal is scattered across informal channels (Facebook groups, word of mouth) with no trust layer, no standard checkout and no seller accountability. Buyers cannot verify sellers; sellers have no storefront or reputation.
 
 ### 1.2 Goals
-- Give buyers a trustworthy, searchable catalog of second-hand items across multiple categories.
-- Give anyone a path to become a verified seller without needing a separate business platform.
-- Give admins a lightweight but real moderation and verification workflow (not just a rubber stamp).
-- Ship an MVP that a 3–4 person student team can build, understand, and maintain without over-engineering.
 
-### 1.3 Non-Goals (out of scope for MVP)
-- Native mobile apps (web-responsive only).
-- Real-time chat between buyer/vendor (flagged as a fast-follow; UI hook only in MVP).
-- Multi-vendor cart splitting into separate shipments/invoices per vendor in v1 (single order can reference multiple vendors' items, but shipping/payment settlement stays simple).
-- International shipping / multi-currency.
-- Automated fraud detection (manual admin review only).
+- Give buyers a trustworthy, searchable catalog of second-hand items.
+- Give anyone a path to become a verified seller without a separate business platform.
+- Give admins a real verification workflow (application, phone call, decision), not a rubber stamp.
+- Keep the codebase small and readable enough for a student team to understand and extend.
 
----
+### 1.3 MVP scope decisions
 
-## 2. Users & Roles
-
-| Role | Description | How they're created |
-|---|---|---|
-| **Buyer** (default) | Any signed-up user. Browses, buys, reviews, can apply to become a Vendor. | Self-service sign-up (email or phone OTP) |
-| **Vendor** | A Buyer whose Vendor Application has been approved. Lists products, fulfills orders, views earnings. | Buyer submits Vendor Application → Admin approves |
-| **Admin** | Platform staff. Reviews vendor applications (incl. a verification call), moderates listings/users, views platform analytics. | Seeded manually (not self-registrable) |
-
-A single `User` always has role `BUYER` by default; becoming a vendor **adds** a linked `Vendor` profile and upgrades effective permissions — it does not replace the buyer identity (a vendor can still buy).
-
-### 2.1 Role Permission Matrix
-
-| Capability | Buyer | Vendor (verified) | Admin |
-|---|:---:|:---:|:---:|
-| Browse/search/filter catalog | ✅ | ✅ | ✅ |
-| Add to cart / checkout / pay | ✅ | ✅ | ✅ |
-| Leave product/seller reviews | ✅ (if purchased) | ✅ | ✅ |
-| Submit Vendor Application | ✅ | — | — |
-| Create/edit/delete own listings | ❌ | ✅ | ✅ (moderation) |
-| View own sales & earnings | ❌ | ✅ | ✅ (all) |
-| View/manage own orders as seller | ❌ | ✅ | ✅ (all) |
-| Approve/reject Vendor Applications | ❌ | ❌ | ✅ |
-| Suspend a vendor / delist a product | ❌ | ❌ | ✅ |
-| Manage categories | ❌ | ❌ | ✅ |
-| Manage homepage banners | ❌ | ❌ | ✅ |
-| View platform-wide analytics | ❌ | ❌ | ✅ |
+- **Payments: cash on delivery (COD) only.** eSewa and Khalti are planned for a later release. The data model already has a generic payment method and status so they can be added without restructuring.
+- **One order per seller.** A cart with items from several sellers is split into one order per seller, which keeps COD collection and shipping simple.
+- **Web only**, mobile responsive. No native apps.
+- **Out of scope for MVP:** real-time chat, international shipping, multi-currency, automated fraud detection.
 
 ---
 
-## 3. Core User Flows
+## 2. Users and roles
 
-### 3.1 Buyer Flow
-1. Sign up / log in (email + password, or phone OTP).
-2. Browse home feed → filter by category (Clothes, Watches, Bags, Tech, Other), price range, condition, size.
-3. Search by keyword.
-4. Open product detail → view images, condition, price, vendor profile/rating, reviews.
-5. Add to cart (or Buy Now).
-6. Checkout → shipping address → payment method (eSewa / Khalti / Cash on Delivery) → confirm order.
-7. Track order status (Pending → Paid → Shipped → Delivered).
-8. Leave a review/rating for the product and vendor after delivery.
-9. Apply to become a Vendor from profile menu at any time.
+| Role            | Description                                                                              | How it is created                                                |
+| --------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Buyer (default) | Any signed-up user. Browses, buys, reviews, and can apply to become a Seller.            | Self sign-up (email and password)                                |
+| Seller          | A Buyer whose application was approved. Lists products, fulfils orders, sees earnings.   | Buyer applies, Admin approves                                    |
+| Admin           | Platform staff. Reviews seller applications, moderates, manages banners, sees analytics. | Created by a script (`pnpm admin:create`), never self-registered |
 
-### 3.2 Vendor Application Flow
-1. Buyer clicks "Become a Vendor" → fills application (business/display name, description, contact phone, contact email, category focus).
-2. Application status = `PENDING`, visible to the applicant on their dashboard.
-3. Admin reviews the application in the Admin queue, **calls the applicant** to verify identity/details, and logs a verification note.
-4. Admin sets status to `VERIFIED` (approved) or `REJECTED` (with a reason shown to the applicant).
-5. On `VERIFIED`, the user's account gains vendor capabilities and a Vendor Dashboard becomes available.
+A user's role always starts as Buyer. Approval of a seller application upgrades the role to Seller inside a single database transaction. The role is stored in the application database and is never read from anything the client can change.
 
-### 3.3 Vendor Flow (post-verification)
-1. Vendor Dashboard: overview of active listings, pending orders, total earnings, rating.
-2. Create listing: title, category, description, price, condition, quantity (typically 1 for unique thrift items), up to N photos.
-3. Manage listings: edit price/description, mark as sold/removed, see view counts.
-4. Manage incoming orders: see items sold, mark as shipped, view buyer shipping address.
-5. View earnings/payout summary (COD vs. digital payments reconciliation).
+### 2.1 Permission matrix
 
-### 3.4 Admin Flow
-1. Admin Dashboard: pending vendor applications count, flagged listings count, today's orders/GMV, active users/vendors.
-2. Vendor Applications queue: view applicant details → mark "Call completed" with notes → Approve / Reject.
-3. Listings moderation: view flagged/reported products → remove listing or warn/suspend vendor.
-4. User management: view users, suspend accounts.
-5. Category management: create/edit/archive categories.
-6. Homepage banner management: create/reorder/schedule/retire the rotating hero banners shown on the buyer home page.
-7. Platform analytics: orders over time, GMV, top categories, top vendors.
+| Capability                             | Buyer                | Seller (active) | Admin |
+| -------------------------------------- | -------------------- | --------------- | ----- |
+| Browse, search and filter the catalog  | Yes                  | Yes             | Yes   |
+| Place orders (cash on delivery)        | Yes                  | Yes             | -     |
+| Review products and sellers            | Yes (after delivery) | Yes             | -     |
+| Apply to become a seller               | Yes                  | -               | -     |
+| See own seller application             | Yes                  | Yes             | -     |
+| Create and edit own listings           | -                    | Yes             | -     |
+| Fulfil own orders                      | -                    | Yes             | -     |
+| Review, approve or reject applications | -                    | -               | Yes   |
+| Suspend a seller, moderate listings    | -                    | -               | Yes   |
+| Manage categories and homepage banners | -                    | -               | Yes   |
+| Manage users, view platform analytics  | -                    | -               | Yes   |
+
+The same matrix lives in code in `packages/shared/src/permissions.ts` and is enforced server-side.
 
 ---
 
-## 4. Functional Requirements
+## 3. Core user flows
 
-### 4.1 Authentication & Accounts
-- Email/password and phone OTP sign-up/sign-in (via Supabase Auth).
-- Password reset via email.
-- Profile management (name, display name, avatar, bio).
-- Session-based route protection by role.
+### 3.1 Buyer
 
-### 4.2 Catalog & Search
-- Categories: Clothes, Watches, Bags, Tech, Other (extensible; admin-managed).
-- Product listing: multi-image upload (stored in Supabase Storage), title, description, price, condition (New/Like New/Good/Fair), category, optional size/brand attributes.
-- Search by keyword; filter by category, price range, condition; sort by price/newest.
-- Product detail page with vendor mini-profile (name, rating, member since, number of listings).
+1. Sign up with name, email, mobile number and password, or log in.
+2. Browse the home page (rotating promotional banners, categories, fresh finds) or search and filter the catalog by category, keyword and sort order.
+3. Open a product: images, condition, price, seller and details.
+4. Add to cart and check out with a shipping address, paying cash on delivery. _(planned)_
+5. Follow the order through placed, confirmed, shipped and delivered. _(planned)_
+6. Leave a rating and review after delivery. _(planned)_
+7. Apply to become a seller at any time from the account page.
 
-### 4.3 Cart & Checkout
-- Cart persists per logged-in user.
-- Checkout collects shipping address, selects payment method: **eSewa**, **Khalti**, or **Cash on Delivery (COD)**.
-- Order confirmation and order-status tracking (Pending → Paid → Shipped → Delivered → Cancelled).
+### 3.2 Seller application (built)
 
-### 4.4 Payments
-- eSewa / Khalti integration for digital payment (redirect + callback verification).
-- COD orders tracked with a manual "collected" confirmation step by the vendor.
-- Payment record stores method, status, transaction id, paid-at timestamp.
+1. A buyer opens "Sell" and fills in the application: shop name, description, contact email, contact phone, city and main category.
+2. The application is saved as **Waiting for review** (`PENDING`). The applicant can see its status at any time.
+3. An admin opens the queue (oldest first) and starts the review (`IN_REVIEW`).
+4. The admin calls the applicant on the phone number provided and records call notes (what was confirmed).
+5. The admin approves or rejects. Approval is only possible after the call has been recorded. Rejection requires a reason that the applicant can see, and the applicant can apply again.
+6. On approval the user becomes a Seller, a seller profile is created, and the seller dashboard opens.
 
-### 4.5 Vendor Management
-- Vendor Application submission form.
-- Admin review workflow with status (`PENDING`, `VERIFIED`, `REJECTED`, `SUSPENDED`) and verification notes/call log.
-- Vendor dashboard: listings CRUD, order fulfillment, earnings summary.
+Every step writes an audit log entry. A person can never have two open applications.
 
-### 4.6 Reviews & Ratings
-- Buyers who completed an order can rate (1–5) and review the product/vendor.
-- Vendor average rating shown on profile and product cards.
+### 3.3 Seller _(listings and orders planned)_
 
-### 4.7 Admin & Moderation
-- Vendor application review queue.
-- Listing flag/report + removal.
-- Category CRUD.
-- Basic analytics (orders, GMV, active vendors).
+1. Open the seller dashboard.
+2. Create listings with photos, price, condition, category and quantity.
+3. Confirm and ship orders, and mark cash as collected on delivery.
+4. See earnings and ratings.
 
-### 4.7a Homepage Banner Management
-- Admin can create a banner: image, headline, subtext, CTA label + link, start/end date, active toggle.
-- Buyer home page displays all currently-active banners (within their start/end window) as an auto-rotating hero carousel (~4–5s per slide, manual prev/next + dot navigation).
-- Admin can reorder banners (controls rotation sequence), deactivate without deleting, or schedule a future banner (shown as "Scheduled" until its start date).
-- No code deploy required to change homepage promotional content.
+### 3.4 Admin
 
-### 4.8 Notifications (MVP-light)
-- In-app status banners for order updates and vendor application decisions.
-- Email notification on vendor approval/rejection and order confirmation (via Supabase/Resend — can be stubbed for MVP demo).
+1. Dashboard with counts of waiting, in-review, approved and rejected applications (built).
+2. Seller application queue and review screen with phone call notes (built).
+3. Homepage banner management: create, reorder, schedule and retire the rotating banners. _(planned, data model and permission exist)_
+4. Listing moderation, user management, category management and analytics. _(planned)_
 
 ---
 
-## 5. Data Model
+## 4. Functional requirements and status
 
-Derived from the Week 4 UML class diagram and Week 5 ER diagram, adapted for Prisma/Postgres:
-
-- **User** — id, name, email, phone, role (`BUYER` \| `VENDOR` \| `ADMIN`), createdAt
-- **UserProfile** — userId, firstName, lastName, displayName, profileImage, bio
-- **Vendor** — id, userId, businessName, description, contactEmail, phone, status (`PENDING` \| `VERIFIED` \| `REJECTED` \| `SUSPENDED`), verificationNotes, createdAt, updatedAt
-- **Category** — id, name, slug, description
-- **Product** — id, vendorId, categoryId, name, description, price, condition, images[], status (`DRAFT` \| `ACTIVE` \| `SOLD` \| `REMOVED` \| `FLAGGED`), createdAt, updatedAt
-- **Order** — id, userId, totalAmount, status (`PENDING` \| `PAID` \| `SHIPPED` \| `DELIVERED` \| `CANCELLED`), shippingAddress, createdAt, updatedAt
-- **OrderItem** — id, orderId, productId, vendorId, quantity, unitPrice, subtotal
-- **Payment** — id, orderId, amount, method (`ESEWA` \| `KHALTI` \| `COD`), status (`PENDING` \| `COMPLETED` \| `FAILED` \| `REFUNDED`), transactionId, paidAt
-- **Review** — id, userId, productId, vendorId, rating, comment, createdAt
-- **Banner** — id, title, subtitle, imageUrl, ctaLabel, ctaLink, sortOrder, isActive, startsAt, endsAt, createdAt, updatedAt
-
-Auth sessions are handled by Supabase Auth directly and are **not** duplicated in the Prisma schema (see Implementation Plan §3 for rationale).
-
-Full Prisma schema lives in `IMPLEMENTATION_PLAN.md`.
-
----
-
-## 6. Non-Functional Requirements
-
-- **Simplicity first:** every teammate should be able to read a file and understand it without extra abstraction layers. Prefer straightforward server actions/route handlers over generic service/repository layers.
-- **Security:** role checks enforced server-side on every mutation; never trust client-submitted role/ownership fields; signed URLs for private storage where needed.
-- **Performance:** product feed paginated (cursor or offset), images served via Supabase CDN with resizing.
-- **Reliability:** payment webhook handling idempotent (safe to receive duplicate callbacks).
-- **Maintainability:** typed end-to-end (TypeScript + Prisma + Zod), consistent folder structure (see Implementation Plan).
-- **Accessibility:** semantic HTML, sufficient color contrast, keyboard-navigable forms.
+| Area              | Requirement                                                                            | Status  |
+| ----------------- | -------------------------------------------------------------------------------------- | ------- |
+| Accounts          | Email and password sign-up and login through Supabase Auth, session refresh, logout    | Built   |
+| Accounts          | Role-based access control enforced server-side and at the route level                  | Built   |
+| Catalog           | Categories, product list with keyword search, category filter, sorting and pagination  | Built   |
+| Catalog           | Product detail page with seller information                                            | Built   |
+| Home page         | Auto-rotating hero banner carousel (pause, previous, next, reduced-motion aware)       | Built   |
+| Seller onboarding | Application form, status page, admin queue, phone-call notes, approve and reject       | Built   |
+| Audit             | Audit log for every seller application step                                            | Built   |
+| Seller            | Seller dashboard shell                                                                 | Built   |
+| Seller            | Listing create, edit and delete with image upload to Supabase Storage                  | Planned |
+| Cart and checkout | Cart, shipping address, cash on delivery order creation (one order per seller)         | Planned |
+| Orders            | Status tracking and seller fulfilment, COD collection confirmation                     | Planned |
+| Reviews           | Ratings and reviews after delivery                                                     | Planned |
+| Admin             | Banner management, category management, listing moderation, user management, analytics | Planned |
+| Payments          | eSewa and Khalti integration                                                           | Later   |
+| Notifications     | Email for application decisions and order confirmations                                | Later   |
 
 ---
 
-## 7. Design System (summary)
+## 5. Data model
 
-Full interactive design system + component reference lives in the HTML demo (`vinted.html`). Summary:
+Derived from the Week 4 UML and Week 5 ER diagrams. Full details in `docs/database.md`.
 
-- **Brand feel:** warm, earthy, grounded — thrifted-but-curated, not flashy.
-- **Color:** deep umber-brown primary `#473536` with near-black ink `#0A0708` for depth/text, muted brick-red accent `#8D4343` (CTA/energy), warm taupe `#ABA79F` as the neutral/muted tone, semantic colors (green/amber/red/blue) reserved for status badges (pending/verified/rejected/sold) so they stay distinct from brand color.
-- **Type:** system UI font stack, clear scale (display/h1–h3/body/small/caption).
-- **Components:** navbar, category chips, product card, condition/status badges, rating stars, forms/inputs, buttons (primary/secondary/ghost/danger), tables (admin), stat cards, empty states.
-- **Layout:** 12-column responsive grid, mobile-first, max content width ~1280px.
+| Entity            | Purpose                                                                           |
+| ----------------- | --------------------------------------------------------------------------------- |
+| User              | Application user linked to a Supabase Auth identity; holds the role               |
+| UserProfile       | Name, phone, avatar, bio                                                          |
+| SellerApplication | A buyer's request to become a seller, with review status, call notes and decision |
+| Seller            | Approved seller profile (shop name, slug, contact details, status)                |
+| Category          | Product categories                                                                |
+| Product           | A listing: title, description, price in paisa, condition, status, quantity        |
+| ProductImage      | Ordered images for a product (storage paths)                                      |
+| Order             | A buyer's order from one seller, with a shipping address snapshot and totals      |
+| OrderItem         | Line items with title and price snapshots                                         |
+| Payment           | One payment per order: method (COD), status, amount                               |
+| Review            | One review per purchased item                                                     |
+| Banner            | Homepage carousel slides with tone, schedule and sort order                       |
+| AuditLog          | Append-only record of sensitive actions                                           |
 
----
-
-## 8. Success Metrics (for a course demo / early launch)
-
-- # of completed vendor applications processed end-to-end (apply → call → verify).
-- # of listings created, # of orders completed.
-- Checkout completion rate (cart → paid order).
-- Time-to-verify for vendor applications.
-
----
-
-## 9. Risks & Assumptions
-
-- **Assumption:** Admin verification is manual (phone call) by design — not automatable in MVP; UI only needs to support logging the outcome, not placing the call.
-- **Risk:** Mixing Prisma with Supabase Row-Level Security can get complex fast — mitigated by keeping all writes behind server-side role checks in Next.js instead of relying on RLS as the primary gate (see Implementation Plan).
-- **Risk:** Payment gateway (eSewa/Khalti) sandbox access may be slow to obtain — plan to build COD first, layer in digital payment behind a feature flag.
-- **Assumption:** Single shared national currency (NPR) and domestic shipping only for MVP.
+Money is stored as whole paisa integers to avoid rounding errors.
 
 ---
 
-## 10. Milestones (mapped from Week 2 cost estimate)
+## 6. Non-functional requirements
 
-The Week 2 COCOMO estimate (~32.6 person-months, ~9.4 months, 3–4 devs) reflects a *commercial* build. For the course project, scope is reduced to an MVP achievable by a 3–4 person student team in an academic term — see `IMPLEMENTATION_PLAN.md` §6 for the condensed phase plan.
+- **Readability first:** small files, descriptive names, a README in each module, no clever abstractions.
+- **Security:** roles enforced server-side; input validated with Zod; Row Level Security enabled on every table; secrets never sent to the browser; safe redirect handling; raw errors never shown to users.
+- **Data integrity:** database constraints for the rules that must never break (one open application per person, non-negative prices, valid ratings), plus transactions for multi-step changes.
+- **Performance:** filtering, sorting and counting happen in the database; lists are paginated.
+- **Reliability:** a non-critical dependency failing (for example banners) must not break the page.
+- **Accessibility:** semantic HTML, visible focus, labelled forms, keyboard-friendly carousel, reduced-motion support, sufficient contrast.
+- **Maintainability:** typed end to end (TypeScript, Prisma, Zod), one shared set of permission and status rules used by both the UI and the server.
+
+---
+
+## 7. Design system summary
+
+Full reference in `docs/design-system.md`.
+
+- **Feel:** warm, earthy and calm. The interface stays quiet so the products are the focus.
+- **Colour:** umber `#473536` (brand, navigation, text accents), ink `#0A0708` (headings and dark surfaces), taupe `#ABA79F` (soft neutral), and a soft clay `#D98F75` for the main call to action. The clay replaced the earlier, heavier brick red because a lighter warm tone feels friendlier and keeps attention on buying. Semantic colours (green, amber, red, blue) are reserved for status only.
+- **Type:** Fraunces for headings, Figtree for interface text, with Noto Sans Devanagari as the fallback so Nepali text renders consistently. All fonts are self-hosted through Fontsource.
+- **Rules:** no gradients and no emoji anywhere; icons come from Lucide; solid colour surfaces only. A script (`pnpm check:design`) fails the build if either appears.
+
+---
+
+## 8. Architecture summary
+
+A single Next.js application (a modular monolith) with shared packages for the database, validation, shared rules and UI, inside a pnpm and Turborepo workspace. Supabase provides authentication, Postgres and storage; Prisma is the only way application code talks to the database. Details in `docs/architecture.md` and `docs/IMPLEMENTATION_PLAN.md`.
+
+---
+
+## 9. Success metrics
+
+- Seller applications processed end to end (apply, call, decide) and the time to decision.
+- Listings created and orders completed.
+- Checkout completion rate (cart to delivered order).
+- Share of buyers who apply to sell.
+
+---
+
+## 10. Risks and assumptions
+
+- **Manual verification by phone** is deliberate and does not scale forever. The queue, audit log and call notes make it manageable for an MVP.
+- **Payment gateway sandboxes** (eSewa, Khalti) can be slow to obtain, which is why COD comes first.
+- **Student team experience:** the architecture favours plain, well-named code and small tasks so new contributors can help (see `docs/CONTRIBUTION_PLAN.md`).
+- Single currency (NPR) and domestic delivery only for the MVP.
+
+---
+
+## 11. Milestones
+
+The Week 2 COCOMO estimate (about 32.6 person-months for a commercial build) is scoped down to an MVP for the course. Phase status and the remaining plan are in `docs/IMPLEMENTATION_PLAN.md`.
