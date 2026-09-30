@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@import "@fontsource-variable/figtree";
+@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/noto-sans-devanagari";
+@import "@feri/ui/styles.css";
+
+@source "../../../../packages/ui/src";
