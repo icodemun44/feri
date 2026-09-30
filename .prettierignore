@@ -1,0 +1,11 @@
+node_modules
+.next
+dist
+coverage
+pnpm-lock.yaml
+packages/database/src/generated
+packages/database/prisma/migrations
+apps/web/next-env.d.ts
+supabase/.temp
+supabase/.branches
+docs/*.docx

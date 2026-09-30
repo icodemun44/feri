@@ -1,0 +1,12 @@
+packages:
+  - apps/*
+  - packages/*
+
+allowBuilds:
+  esbuild: true
+  supabase: true
+  sharp: true
+  prisma: true
+  "@prisma/engines": true
+  "@prisma/client": true
+  unrs-resolver: true

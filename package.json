@@ -1,0 +1,55 @@
+{
+  "name": "feri-nepal",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Feri Nepal - peer-to-peer thrift marketplace",
+  "packageManager": "pnpm@11.9.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "turbo run dev --filter=@feri/web",
+    "build": "turbo run build",
+    "lint": "turbo run lint && pnpm check:design",
+    "typecheck": "turbo run typecheck",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check:design": "node scripts/check-design-rules.mjs",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck",
+    "db:generate": "pnpm --filter @feri/database generate",
+    "db:migrate": "pnpm --filter @feri/database migrate:dev",
+    "db:deploy": "pnpm --filter @feri/database migrate:deploy",
+    "db:status": "pnpm --filter @feri/database migrate:status",
+    "db:reset": "pnpm --filter @feri/database migrate:reset",
+    "db:seed": "pnpm --filter @feri/database seed",
+    "db:studio": "pnpm --filter @feri/database studio",
+    "admin:create": "pnpm --filter @feri/web admin:create",
+    "demo:seed": "pnpm --filter @feri/web demo:seed",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:status": "supabase status",
+    "docker:up": "docker compose up --build -d",
+    "docker:down": "docker compose down",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,mjs,js,json,css,md,yml,yaml}": "prettier --write"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.3",
+    "dotenv": "^18.0.4",
+    "eslint": "^10.11.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.9",
+    "supabase": "^2.118.0",
+    "tsx": "^4.23.15",
+    "turbo": "^2.11.5",
+    "typescript": "6.0.3",
+    "typescript-eslint": "^8.71.0"
+  }
+}
