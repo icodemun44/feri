@@ -318,15 +318,17 @@ model Payment {
 }
 
 model Review {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  orderItemId String   @unique @map("order_item_id") @db.Uuid
-  reviewerId  String   @map("reviewer_id") @db.Uuid
-  sellerId    String   @map("seller_id") @db.Uuid
-  productId   String   @map("product_id") @db.Uuid
-  rating      Int
-  comment     String?
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderItemId   String    @unique @map("order_item_id") @db.Uuid
+  reviewerId    String    @map("reviewer_id") @db.Uuid
+  sellerId      String    @map("seller_id") @db.Uuid
+  productId     String    @map("product_id") @db.Uuid
+  rating        Int
+  comment       String?
+  removedAt     DateTime? @map("removed_at") @db.Timestamptz(6)
+  removalReason String?   @map("removal_reason")
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   orderItem OrderItem @relation(fields: [orderItemId], references: [id])
   reviewer  User      @relation(fields: [reviewerId], references: [id])

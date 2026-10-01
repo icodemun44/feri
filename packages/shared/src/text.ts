@@ -21,3 +21,12 @@ export const getInitials = (fullName: string): string =>
     .slice(0, 2)
     .map((namePart) => namePart.charAt(0).toUpperCase())
     .join("");
+
+export const toPublicReviewerName = (fullName: string): string => {
+  const [firstName, ...otherNames] = fullName.split(/\s+/).filter(Boolean);
+  const lastName = otherNames.at(-1);
+  if (!firstName) {
+    return "A buyer";
+  }
+  return lastName ? `${firstName} ${lastName.charAt(0).toUpperCase()}.` : firstName;
+};
