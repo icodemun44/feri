@@ -167,7 +167,7 @@ Full reference in `docs/design-system.md`.
 
 - **Feel:** warm, earthy and calm. The interface stays quiet so the products are the focus.
 - **Colour:** umber `#473536` (brand, navigation, text accents), ink `#0A0708` (headings and dark surfaces), taupe `#ABA79F` (soft neutral), and a soft clay `#D98F75` for the main call to action. The clay replaced the earlier, heavier brick red because a lighter warm tone feels friendlier and keeps attention on buying. Semantic colours (green, amber, red, blue) are reserved for status only.
-- **Type:** Fraunces for headings, Figtree for interface text, with Noto Sans Devanagari as the fallback so Nepali text renders consistently. All fonts are self-hosted through Fontsource.
+- **Type:** Bitter (a warm slab serif) for headings and Mukta for interface text; Mukta also covers Devanagari so Nepali text renders consistently. All fonts are self-hosted through Fontsource.
 - **Rules:** no gradients and no emoji anywhere; icons come from Lucide; solid colour surfaces only. A script (`pnpm check:design`) fails the build if either appears.
 
 ---

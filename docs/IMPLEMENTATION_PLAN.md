@@ -15,7 +15,7 @@ Companion to `PRD.md`. This document describes the tech stack, the repository la
 | Auth            | Supabase Auth (email and password)                                         | No hand-rolled authentication                                               |
 | Storage         | Supabase Storage (`product-images` bucket)                                 | Product photos                                                              |
 | Styling         | Tailwind CSS 4 with design tokens                                          | Consistent, small CSS; tokens live in one file                              |
-| Icons and fonts | Lucide, Fraunces, Figtree, Noto Sans Devanagari (Fontsource)               | No emoji, self-hosted fonts, Nepali text support                            |
+| Icons and fonts | Lucide, Bitter, Mukta (Fontsource)                                         | No emoji, self-hosted fonts, Nepali text support                            |
 | Validation      | Zod                                                                        | One schema used by forms and server actions                                 |
 | Monorepo        | pnpm workspaces and Turborepo                                              | Shared packages with cached tasks                                           |
 | Quality         | ESLint (one root config), Prettier, Husky, commitlint, design-rules script | Consistent code and commit history                                          |

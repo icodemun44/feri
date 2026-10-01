@@ -34,13 +34,13 @@ Contrast (WCAG): ink on clay 7.8:1, white on umber 11.5:1, muted text on white 5
 
 ## Typography
 
-| Use             | Font                            |
-| --------------- | ------------------------------- |
-| Headings        | Fraunces (variable, serif)      |
-| Interface, body | Figtree (variable, sans)        |
-| Nepali text     | Noto Sans Devanagari (fallback) |
+| Use             | Font                          |
+| --------------- | ----------------------------- |
+| Headings        | Bitter (variable, slab serif) |
+| Interface, body | Mukta (humanist sans)         |
+| Nepali text     | Mukta (covers Devanagari)     |
 
-Fonts are installed from Fontsource, so they are self-hosted and there are no runtime requests to Google.
+Fonts are installed from Fontsource, so they are self-hosted and there are no runtime requests to Google. Bitter is a warm slab serif that feels like a price tag; Mukta is a friendly sans whose Latin and Devanagari letters come from the same family, so English and Nepali text match.
 
 ## Components (`@feri/ui`)
 

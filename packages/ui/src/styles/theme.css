@@ -1,7 +1,6 @@
 @theme {
-  --font-sans:
-    "Figtree Variable", "Noto Sans Devanagari Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Fraunces Variable", "Noto Sans Devanagari Variable", Georgia, serif;
+  --font-sans: "Mukta", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bitter Variable", "Mukta", Georgia, serif;
 
   --color-canvas: #faf9f7;
   --color-surface: #ffffff;

@@ -128,7 +128,7 @@ Goal: a simple, recognisable logo set the lead can drop straight into the websit
   | Taupe         | `#ABA79F` | Quiet details          |
   | Clay (accent) | `#D98F75` | Small highlight only   |
 
-- Wordmark font: **Fraunces** (free on Google Fonts), matching the website headings.
+- Wordmark font: **Bitter** (free on Google Fonts), matching the website headings.
 - The website currently uses a plain placeholder: a rounded square with a loop icon next to the text "Feri Nepal". Your logo replaces it.
 
 **Files to deliver** (names matter, the lead wires them into the site):
