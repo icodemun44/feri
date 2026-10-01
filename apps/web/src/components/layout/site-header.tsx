@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { LogOut, Search } from "lucide-react";
+import { LogOut, Search, ShoppingBag } from "lucide-react";
 import { getInitials, ROLES } from "@feri/shared";
 import { Button } from "@feri/ui";
 import { signOutAction } from "@/modules/auth/auth.actions";
+import { cartService } from "@/modules/cart/cart.service";
 import type { AppUser } from "@/modules/users/user.types";
 import { getCurrentUser } from "@/server/auth/session";
 import { HeaderNav, type HeaderNavItem } from "./header-nav";
@@ -23,6 +24,9 @@ const buildNavItems = (user: AppUser | null): HeaderNavItem[] => {
   if (user?.role === ROLES.ADMIN) {
     items.push({ href: "/admin", label: "Admin", icon: "admin", activePrefixes: ["/admin"] });
   }
+  if (user && user.role !== ROLES.ADMIN) {
+    items.push({ href: "/orders", label: "Orders", icon: "orders", activePrefixes: ["/orders"] });
+  }
   if (!user || user.role === ROLES.BUYER) {
     items.push({ href: "/sell", label: "Sell", icon: "sell", activePrefixes: ["/sell"] });
   }
@@ -31,6 +35,7 @@ const buildNavItems = (user: AppUser | null): HeaderNavItem[] => {
 
 export const SiteHeader = async () => {
   const user = await getCurrentUser();
+  const cartItemCount = await cartService.countForHeader(user);
 
   return (
     <header className="sticky top-0 z-40 px-3 pt-3 sm:pt-4">
@@ -65,6 +70,24 @@ export const SiteHeader = async () => {
 
         {user ? (
           <div className="ml-auto flex items-center gap-2 md:ml-0">
+            {user.role !== ROLES.ADMIN ? (
+              <Link
+                href="/cart"
+                aria-label={cartItemCount > 0 ? `Cart, ${cartItemCount} items` : "Cart"}
+                title="Cart"
+                className="relative flex size-11 items-center justify-center rounded-full text-body transition-colors hover:bg-surface-muted hover:text-ink"
+              >
+                <ShoppingBag aria-hidden="true" className="size-5" />
+                {cartItemCount > 0 ? (
+                  <span
+                    aria-hidden="true"
+                    className="absolute right-1 top-1 flex min-w-5 items-center justify-center rounded-full bg-accent px-1 text-xs font-semibold leading-5 text-ink"
+                  >
+                    {cartItemCount}
+                  </span>
+                ) : null}
+              </Link>
+            ) : null}
             <Link
               href="/account"
               aria-label="Your account"

@@ -2,9 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft, Store } from "lucide-react";
-import { formatPaisa } from "@feri/shared";
+import { formatPaisa, hasPermission, PERMISSIONS, type Role } from "@feri/shared";
 import { Alert, Badge, Button, Card, CardContent, Container } from "@feri/ui";
 import { formatDate } from "@/lib/format";
+import { AddToCartButton } from "@/modules/cart/components/add-to-cart-button";
+import { cartService } from "@/modules/cart/cart.service";
+import { getCurrentUser } from "@/server/auth/session";
 import { catalogService } from "@/modules/catalog/catalog.service";
 import { PRODUCT_CONDITION_LABELS } from "@/modules/catalog/catalog.constants";
 import { CategoryIcon } from "@/modules/catalog/components/category-icon";
@@ -19,12 +22,54 @@ export const generateMetadata = async ({ params }: ProductPageProps): Promise<Me
   return { title: product?.title ?? "Product not found" };
 };
 
+type PurchaseAreaProps = {
+  productId: string;
+  isSold: boolean;
+  isOwnListing: boolean;
+  userRole: Role | undefined;
+  isInCart: boolean;
+};
+
+const PurchaseArea = ({
+  productId,
+  isSold,
+  isOwnListing,
+  userRole,
+  isInCart,
+}: PurchaseAreaProps) => {
+  if (isSold) {
+    return (
+      <Button size="lg" disabled>
+        This item has been sold
+      </Button>
+    );
+  }
+  if (!userRole) {
+    return (
+      <Button asChild size="lg" variant="accent">
+        <Link href={`/login?next=${encodeURIComponent(`/products/${productId}`)}`}>
+          Log in to buy
+        </Link>
+      </Button>
+    );
+  }
+  if (isOwnListing) {
+    return <Alert tone="info">This is your own listing.</Alert>;
+  }
+  if (!hasPermission(userRole, PERMISSIONS.ORDER_PLACE)) {
+    return <Alert tone="info">Admin accounts cannot place orders.</Alert>;
+  }
+  return <AddToCartButton productId={productId} isInCart={isInCart} />;
+};
+
 const ProductPage = async ({ params }: ProductPageProps) => {
   const { productId } = await params;
   const product = await catalogService.getProductDetail(productId);
   if (!product) {
     notFound();
   }
+  const user = await getCurrentUser();
+  const isInCart = await cartService.isInCart(user, product.id);
 
   const [primaryImage] = product.images;
 
@@ -110,12 +155,13 @@ const ProductPage = async ({ params }: ProductPageProps) => {
 
           <p className="whitespace-pre-line text-body">{product.description}</p>
 
-          <div className="flex flex-col gap-2">
-            <Button size="lg" variant="accent" disabled>
-              Buy with cash on delivery
-            </Button>
-            <p className="text-xs text-muted">Checkout opens in the next release.</p>
-          </div>
+          <PurchaseArea
+            productId={product.id}
+            isSold={product.isSold}
+            isOwnListing={user?.id === product.seller.userId}
+            userRole={user?.role}
+            isInCart={isInCart}
+          />
 
           <Card>
             <CardContent className="flex items-center gap-4">

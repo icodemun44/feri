@@ -2,10 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ShieldCheck, Store, Tag, type LucideProps } from "lucide-react";
+import {
+  LayoutDashboard,
+  ReceiptText,
+  ShieldCheck,
+  Store,
+  Tag,
+  type LucideProps,
+} from "lucide-react";
 import { cn } from "@feri/ui";
 
-export type HeaderNavIconName = "browse" | "sell" | "shop" | "admin";
+export type HeaderNavIconName = "browse" | "sell" | "shop" | "admin" | "orders";
 
 export type HeaderNavItem = {
   href: string;
@@ -26,6 +33,8 @@ const HeaderNavIcon = ({ name, ...iconProps }: LucideProps & { name: HeaderNavIc
       return <LayoutDashboard {...iconProps} />;
     case "admin":
       return <ShieldCheck {...iconProps} />;
+    case "orders":
+      return <ReceiptText {...iconProps} />;
   }
 };
 

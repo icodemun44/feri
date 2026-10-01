@@ -26,7 +26,9 @@ const productDetailSelection = {
   status: true,
   reviewStatus: true,
   category: { select: { name: true, slug: true } },
-  seller: { select: { id: true, businessName: true, city: true, approvedAt: true } },
+  seller: {
+    select: { id: true, userId: true, businessName: true, city: true, approvedAt: true },
+  },
   images: { orderBy: { position: "asc" }, select: { storagePath: true, altText: true } },
 } satisfies Prisma.ProductSelect;
 

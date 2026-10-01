@@ -38,5 +38,5 @@ export type ProductDetailView = {
   categoryName: string;
   categorySlug: string;
   images: ProductImageView[];
-  seller: { id: string; businessName: string; city: string; memberSince: Date };
+  seller: { id: string; userId: string; businessName: string; city: string; memberSince: Date };
 };

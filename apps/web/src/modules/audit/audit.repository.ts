@@ -11,11 +11,14 @@ export const AUDIT_ACTIONS = {
   PRODUCT_PUBLISHED: "product.published",
   PRODUCT_APPROVED: "product.approved",
   PRODUCT_REMOVED: "product.removed",
+  ORDER_PLACED: "order.placed",
+  ORDER_CANCELLED: "order.cancelled",
 } as const;
 
 export const AUDIT_ENTITY_TYPES = {
   SELLER_APPLICATION: "seller_application",
   PRODUCT: "product",
+  ORDER: "order",
 } as const;
 
 type AuditAction = (typeof AUDIT_ACTIONS)[keyof typeof AUDIT_ACTIONS];

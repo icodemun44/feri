@@ -56,6 +56,7 @@ const toProductDetailView = (row: ProductDetailRow): ProductDetailView => ({
   })),
   seller: {
     id: row.seller.id,
+    userId: row.seller.userId,
     businessName: row.seller.businessName,
     city: row.seller.city,
     memberSince: row.seller.approvedAt,
