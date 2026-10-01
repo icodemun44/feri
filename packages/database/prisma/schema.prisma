@@ -49,6 +49,13 @@ enum ProductStatus {
   @@map("product_status")
 }
 
+enum ProductReviewStatus {
+  PENDING
+  APPROVED
+
+  @@map("product_review_status")
+}
+
 enum OrderStatus {
   PLACED
   CONFIRMED
@@ -99,6 +106,7 @@ model User {
   orders               Order[]
   reviews              Review[]
   auditLogs            AuditLog[]
+  reviewedProducts     Product[]           @relation("ProductReviewer")
 
   @@index([role])
   @@map("users")
@@ -192,24 +200,29 @@ model Seller {
 }
 
 model Product {
-  id          String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  sellerId    String           @map("seller_id") @db.Uuid
-  categoryId  String           @map("category_id") @db.Uuid
-  title       String
-  description String
-  priceMinor  Int              @map("price_minor")
-  condition   ProductCondition
-  status      ProductStatus    @default(DRAFT)
-  brand       String?
-  size        String?
-  quantity    Int              @default(1)
-  publishedAt DateTime?        @map("published_at") @db.Timestamptz(6)
-  soldAt      DateTime?        @map("sold_at") @db.Timestamptz(6)
-  createdAt   DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
+  id            String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sellerId      String              @map("seller_id") @db.Uuid
+  categoryId    String              @map("category_id") @db.Uuid
+  title         String
+  description   String
+  priceMinor    Int                 @map("price_minor")
+  condition     ProductCondition
+  status        ProductStatus       @default(DRAFT)
+  reviewStatus  ProductReviewStatus @default(PENDING) @map("review_status")
+  reviewedAt    DateTime?           @map("reviewed_at") @db.Timestamptz(6)
+  reviewedById  String?             @map("reviewed_by_id") @db.Uuid
+  removalReason String?             @map("removal_reason")
+  brand         String?
+  size          String?
+  quantity      Int                 @default(1)
+  publishedAt   DateTime?           @map("published_at") @db.Timestamptz(6)
+  soldAt        DateTime?           @map("sold_at") @db.Timestamptz(6)
+  createdAt     DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime            @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   seller     Seller         @relation(fields: [sellerId], references: [id])
   category   Category       @relation(fields: [categoryId], references: [id])
+  reviewedBy User?          @relation("ProductReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
   images     ProductImage[]
   orderItems OrderItem[]
   reviews    Review[]
@@ -217,6 +230,7 @@ model Product {
   @@index([status, createdAt(sort: Desc)])
   @@index([categoryId, status])
   @@index([sellerId, status])
+  @@index([status, reviewStatus])
   @@map("products")
 }
 
@@ -275,8 +289,8 @@ model OrderItem {
   subtotalMinor  Int      @map("subtotal_minor")
   createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
 
-  order   Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product Product  @relation(fields: [productId], references: [id])
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
   review  Review?
 
   @@index([orderId])
