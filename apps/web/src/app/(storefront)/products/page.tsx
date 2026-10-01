@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Search } from "lucide-react";
-import { Button, Container, Input, Select } from "@feri/ui";
+import { Button, Container, Select } from "@feri/ui";
 import { productListQuerySchema, PRODUCT_SORT_OPTIONS } from "@feri/validation";
 import { PageHeading } from "@/components/layout/page-heading";
 import { Pagination } from "@/components/layout/pagination";
@@ -32,26 +31,15 @@ const ProductsPage = async ({ searchParams }: ProductsPageProps) => {
       <div className="mb-8 flex flex-col gap-5">
         <CategoryChips categories={categories} activeCategorySlug={query.category || undefined} />
 
-        <form action="/products" method="get" className="flex flex-wrap gap-3">
+        <form action="/products" method="get" className="flex flex-wrap items-center gap-3">
           {query.category ? <input type="hidden" name="category" value={query.category} /> : null}
-          <div className="relative min-w-56 flex-1">
-            <label htmlFor="products-search" className="sr-only">
-              Search
-            </label>
-            <Search
-              aria-hidden="true"
-              className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted"
-            />
-            <Input
-              id="products-search"
-              name="q"
-              type="search"
-              defaultValue={query.q ?? ""}
-              placeholder="Search by name or brand"
-              className="pl-10"
-            />
-          </div>
-          <div>
+          {query.q ? <input type="hidden" name="q" value={query.q} /> : null}
+          {query.q ? (
+            <p className="mr-auto text-sm text-muted">
+              Results for <span className="font-semibold text-ink">{query.q}</span>
+            </p>
+          ) : null}
+          <div className="ml-auto flex items-center gap-3">
             <label htmlFor="products-sort" className="sr-only">
               Sort by
             </label>
@@ -60,10 +48,10 @@ const ProductsPage = async ({ searchParams }: ProductsPageProps) => {
               <option value={PRODUCT_SORT_OPTIONS.PRICE_ASCENDING}>Price: low to high</option>
               <option value={PRODUCT_SORT_OPTIONS.PRICE_DESCENDING}>Price: high to low</option>
             </Select>
+            <Button type="submit" variant="secondary">
+              Sort
+            </Button>
           </div>
-          <Button type="submit" variant="secondary">
-            Apply
-          </Button>
         </form>
       </div>
 
