@@ -1,0 +1,61 @@
+name: Bug report
+description: Something does not work or looks wrong
+labels: ["bug"]
+body:
+  - type: input
+    id: where
+    attributes:
+      label: Where did it happen?
+      description: The page address, for example /sell/apply
+    validations:
+      required: true
+  - type: dropdown
+    id: account
+    attributes:
+      label: Which account were you using?
+      options:
+        - Not logged in
+        - Buyer
+        - Seller
+        - Admin
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: What did you click or type, in order?
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened instead?
+      description: Drag a screenshot or a short video into this box.
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device and browser
+      placeholder: Android phone, Chrome
+  - type: dropdown
+    id: severity
+    attributes:
+      label: How bad is it?
+      options:
+        - Blocks use (I cannot continue)
+        - Annoying (I can work around it)
+        - Cosmetic (looks wrong but works)
+    validations:
+      required: true

@@ -91,6 +91,7 @@ docs                Product and engineering documentation
 - [Role-based access control](docs/rbac.md)
 - [Design system](docs/design-system.md)
 - [Team contribution plan](docs/CONTRIBUTION_PLAN.md)
+- [Getting started for teammates (no terminal needed)](docs/GETTING_STARTED.md)
 
 Every folder in `apps/web/src/modules` has its own `README.md` explaining its purpose and flow.
 
