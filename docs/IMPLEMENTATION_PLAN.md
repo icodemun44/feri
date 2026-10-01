@@ -59,7 +59,7 @@ See `architecture.md` for the layering rules.
 | 3     | Seller application workflow: apply, status, admin queue, call notes, approve and reject             | Done    |
 | 4     | Seller listings: create, edit, publish, photo upload to Storage, admin check of new listings        | Done    |
 | 5     | Cart and checkout: address form, one order per seller, COD payment record                           | Done    |
-| 6     | Order management: seller fulfilment, status tracking, COD collection                                | Planned |
+| 6     | Order management: seller fulfilment, status tracking, COD collection                                | Done    |
 | 7     | Reviews and seller ratings                                                                          | Planned |
 | 8     | Admin tools: banner management, category management, listing moderation, user suspension, analytics | Planned |
 | 9     | Polish: empty states, error pages, responsive and accessibility pass, demo data                     | Planned |

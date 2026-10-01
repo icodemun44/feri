@@ -119,7 +119,7 @@ Every step writes an audit log entry. A person can never have two open applicati
 | Admin             | Listings section: check new listings after they go live, or remove them with a reason               | Built   |
 | Catalog           | "Checked" and "Not yet checked" tags on cards and a clear banner on the product page                | Built   |
 | Cart and checkout | Cart, delivery address, cash on delivery orders (one order per seller), buyer order list and cancel | Built   |
-| Orders            | Seller fulfilment (confirm, ship, deliver) and COD collection confirmation                          | Planned |
+| Orders            | Seller fulfilment (confirm, ship, deliver, cancel with a reason) and cash collection on delivery    | Built   |
 | Reviews           | Ratings and reviews after delivery                                                                  | Planned |
 | Admin             | Banner management, category management, listing moderation, user management, analytics              | Planned |
 | Payments          | eSewa and Khalti integration                                                                        | Later   |
