@@ -27,7 +27,14 @@ const productDetailSelection = {
   reviewStatus: true,
   category: { select: { name: true, slug: true } },
   seller: {
-    select: { id: true, userId: true, businessName: true, city: true, approvedAt: true },
+    select: {
+      id: true,
+      userId: true,
+      slug: true,
+      businessName: true,
+      city: true,
+      approvedAt: true,
+    },
   },
   images: { orderBy: { position: "asc" }, select: { storagePath: true, altText: true } },
 } satisfies Prisma.ProductSelect;
@@ -46,6 +53,7 @@ const ORDER_BY_SORT_OPTION: Record<ProductSortOption, Prisma.ProductOrderByWithR
 type ProductSearchInput = {
   searchText: string | undefined;
   categorySlug: string | undefined;
+  sellerId?: string | undefined;
   sort: ProductSortOption;
   window: PaginationWindow;
 };
@@ -53,11 +61,16 @@ type ProductSearchInput = {
 const buildProductFilter = ({
   searchText,
   categorySlug,
-}: Pick<ProductSearchInput, "searchText" | "categorySlug">): Prisma.ProductWhereInput => ({
+  sellerId,
+}: Pick<
+  ProductSearchInput,
+  "searchText" | "categorySlug" | "sellerId"
+>): Prisma.ProductWhereInput => ({
   status: ProductStatus.ACTIVE,
   quantity: { gt: 0 },
   seller: { status: SellerStatus.ACTIVE },
   ...(categorySlug ? { category: { slug: categorySlug } } : {}),
+  ...(sellerId ? { sellerId } : {}),
   ...(searchText
     ? {
         OR: [

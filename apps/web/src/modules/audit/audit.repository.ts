@@ -11,6 +11,8 @@ export const AUDIT_ACTIONS = {
   PRODUCT_PUBLISHED: "product.published",
   PRODUCT_APPROVED: "product.approved",
   PRODUCT_REMOVED: "product.removed",
+  REVIEW_CREATED: "review.created",
+  REVIEW_REMOVED: "review.removed",
   ORDER_PLACED: "order.placed",
   ORDER_CONFIRMED: "order.confirmed",
   ORDER_SHIPPED: "order.shipped",
@@ -22,6 +24,7 @@ export const AUDIT_ENTITY_TYPES = {
   SELLER_APPLICATION: "seller_application",
   PRODUCT: "product",
   ORDER: "order",
+  REVIEW: "review",
 } as const;
 
 type AuditAction = (typeof AUDIT_ACTIONS)[keyof typeof AUDIT_ACTIONS];

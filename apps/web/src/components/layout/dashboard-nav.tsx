@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   Package,
   ReceiptText,
+  Star,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@feri/ui";
@@ -16,6 +17,7 @@ const DASHBOARD_ICONS = {
   applications: ClipboardCheck,
   listings: Package,
   orders: ReceiptText,
+  reviews: Star,
 } as const satisfies Record<string, LucideIcon>;
 
 export type DashboardIconName = keyof typeof DASHBOARD_ICONS;

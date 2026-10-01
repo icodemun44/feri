@@ -2,7 +2,7 @@ import "server-only";
 import { randomBytes } from "node:crypto";
 import type { DbClient } from "@feri/database";
 import { slugify } from "@feri/shared";
-import { sellerRepository } from "./seller.repository";
+import { sellerRepository, type PublicSeller } from "./seller.repository";
 
 const SLUG_SUFFIX_BYTES = 3;
 const MAX_SLUG_ATTEMPTS = 5;
@@ -21,4 +21,7 @@ const generateUniqueSlug = async (businessName: string, db: DbClient): Promise<s
   throw new Error("Could not generate a unique seller slug");
 };
 
-export const sellerService = { generateUniqueSlug };
+const findPublicShop = (slug: string): Promise<PublicSeller | null> =>
+  sellerRepository.findActiveBySlug(slug);
+
+export const sellerService = { generateUniqueSlug, findPublicShop };

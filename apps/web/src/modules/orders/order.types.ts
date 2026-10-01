@@ -13,6 +13,7 @@ export type OrderSummary = {
 };
 
 export type OrderItemView = {
+  orderItemId: string;
   productId: string;
   title: string;
   unitPriceMinor: number;

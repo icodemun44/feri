@@ -58,6 +58,7 @@ const detailSelection = {
   items: {
     orderBy: { createdAt: "asc" },
     select: {
+      id: true,
       productId: true,
       titleSnapshot: true,
       unitPriceMinor: true,
@@ -101,6 +102,7 @@ const toDetail = (row: DetailRow): OrderDetail => ({
   sellerName: row.seller.businessName,
   sellerPhone: row.seller.contactPhone,
   items: row.items.map((item) => ({
+    orderItemId: item.id,
     productId: item.productId,
     title: item.titleSnapshot,
     unitPriceMinor: item.unitPriceMinor,

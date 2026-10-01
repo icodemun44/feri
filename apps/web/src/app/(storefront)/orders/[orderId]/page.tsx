@@ -22,6 +22,10 @@ import {
 } from "@/modules/orders/order.constants";
 import { orderService } from "@/modules/orders/order.service";
 import type { OrderDetail } from "@/modules/orders/order.types";
+import { ReviewForm } from "@/modules/reviews/components/review-form";
+import { ReviewList } from "@/modules/reviews/components/review-list";
+import { reviewService } from "@/modules/reviews/review.service";
+import type { AppUser } from "@/modules/users/user.types";
 import { requireRole } from "@/server/auth/guards";
 
 export const metadata: Metadata = { title: "Order" };
@@ -30,13 +34,13 @@ type OrderPageProps = {
   params: Promise<{ orderId: string }>;
 };
 
-const loadOrder = async (orderId: string): Promise<OrderDetail> => {
+const loadOrder = async (orderId: string): Promise<{ user: AppUser; order: OrderDetail }> => {
   const user = await requireRole([ROLES.BUYER, ROLES.SELLER], { nextPath: `/orders/${orderId}` });
   if (!uuidField.safeParse(orderId).success) {
     notFound();
   }
   try {
-    return await orderService.getMine(user, orderId);
+    return { user, order: await orderService.getMine(user, orderId) };
   } catch (error) {
     if (error instanceof AppError && error.code === ERROR_CODES.NOT_FOUND) {
       notFound();
@@ -50,8 +54,12 @@ const progressIndexOf = (status: OrderDetail["status"]): number =>
 
 const OrderPage = async ({ params }: OrderPageProps) => {
   const { orderId } = await params;
-  const order = await loadOrder(orderId);
+  const { user, order } = await loadOrder(orderId);
   const isCancelled = order.status === ORDER_STATUSES.CANCELLED;
+  const isDelivered = order.status === ORDER_STATUSES.DELIVERED;
+  const reviewsByOrderItemId = isDelivered
+    ? await reviewService.listMineForOrder(user, order.id)
+    : {};
   const currentStepIndex = progressIndexOf(order.status);
 
   return (
@@ -174,6 +182,29 @@ const OrderPage = async ({ params }: OrderPageProps) => {
             </CardContent>
           </Card>
         </div>
+
+        {isDelivered ? (
+          <Card>
+            <CardHeader>
+              <CardTitle>Rate your purchase</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-6">
+              {order.items.map((item) => {
+                const review = reviewsByOrderItemId[item.orderItemId];
+                return (
+                  <div key={item.orderItemId} className="flex flex-col gap-3">
+                    <p className="font-semibold text-ink">{item.title}</p>
+                    {review ? (
+                      <ReviewList reviews={[review]} />
+                    ) : (
+                      <ReviewForm orderItemId={item.orderItemId} />
+                    )}
+                  </div>
+                );
+              })}
+            </CardContent>
+          </Card>
+        ) : null}
 
         {order.status === ORDER_STATUSES.PLACED ? <CancelOrderButton orderId={order.id} /> : null}
       </div>

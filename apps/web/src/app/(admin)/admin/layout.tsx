@@ -9,6 +9,7 @@ const ADMIN_NAV_ITEMS: readonly DashboardNavItem[] = [
   { href: "/admin", label: "Overview", icon: "overview", exact: true },
   { href: "/admin/seller-applications", label: "Seller applications", icon: "applications" },
   { href: "/admin/listings", label: "Listings", icon: "listings" },
+  { href: "/admin/reviews", label: "Reviews", icon: "reviews" },
 ];
 
 const AdminLayout = async ({ children }: { children: ReactNode }) => {

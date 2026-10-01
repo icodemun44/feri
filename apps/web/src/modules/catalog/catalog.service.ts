@@ -57,6 +57,7 @@ const toProductDetailView = (row: ProductDetailRow): ProductDetailView => ({
   seller: {
     id: row.seller.id,
     userId: row.seller.userId,
+    slug: row.seller.slug,
     businessName: row.seller.businessName,
     city: row.seller.city,
     memberSince: row.seller.approvedAt,
@@ -92,6 +93,18 @@ const listLatestProducts = async (categorySlug?: string): Promise<ProductCardVie
   return rows.map(toProductCardView);
 };
 
+const listSellerProducts = async (sellerId: string): Promise<ProductCardView[]> => {
+  const window = resolvePaginationWindow({});
+  const { rows } = await catalogRepository.searchProducts({
+    searchText: undefined,
+    categorySlug: undefined,
+    sellerId,
+    sort: PRODUCT_SORT_OPTIONS.NEWEST,
+    window,
+  });
+  return rows.map(toProductCardView);
+};
+
 const getProductDetail = async (productId: string): Promise<ProductDetailView | null> => {
   if (!uuidField.safeParse(productId).success) {
     return null;
@@ -104,5 +117,6 @@ export const catalogService = {
   listCategories,
   searchProducts,
   listLatestProducts,
+  listSellerProducts,
   getProductDetail,
 };

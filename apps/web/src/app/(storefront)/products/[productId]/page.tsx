@@ -4,7 +4,10 @@ import { notFound } from "next/navigation";
 import { ChevronLeft, Store } from "lucide-react";
 import { formatPaisa, hasPermission, PERMISSIONS, type Role } from "@feri/shared";
 import { Alert, Badge, Button, Card, CardContent, Container } from "@feri/ui";
+import { StarRating } from "@/components/shared/star-rating";
 import { formatDate } from "@/lib/format";
+import { ReviewList } from "@/modules/reviews/components/review-list";
+import { reviewService } from "@/modules/reviews/review.service";
 import { AddToCartButton } from "@/modules/cart/components/add-to-cart-button";
 import { cartService } from "@/modules/cart/cart.service";
 import { getCurrentUser } from "@/server/auth/session";
@@ -69,7 +72,11 @@ const ProductPage = async ({ params }: ProductPageProps) => {
     notFound();
   }
   const user = await getCurrentUser();
-  const isInCart = await cartService.isInCart(user, product.id);
+  const [isInCart, sellerRating, recentReviews] = await Promise.all([
+    cartService.isInCart(user, product.id),
+    reviewService.summarizeSeller(product.seller.id),
+    reviewService.listRecentForSeller(product.seller.id),
+  ]);
 
   const [primaryImage] = product.images;
 
@@ -168,16 +175,41 @@ const ProductPage = async ({ params }: ProductPageProps) => {
               <span className="flex size-11 items-center justify-center rounded-full bg-primary-soft text-primary">
                 <Store aria-hidden="true" className="size-5" />
               </span>
-              <div className="flex flex-col">
-                <p className="font-semibold text-ink">{product.seller.businessName}</p>
+              <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                <Link
+                  href={`/shops/${product.seller.slug}`}
+                  className="font-semibold text-ink hover:text-primary"
+                >
+                  {product.seller.businessName}
+                </Link>
                 <p className="text-sm text-muted">
                   {product.seller.city} - selling since {formatDate(product.seller.memberSince)}
                 </p>
+                {sellerRating.average === null ? (
+                  <p className="text-sm text-muted">No reviews yet</p>
+                ) : (
+                  <StarRating rating={sellerRating.average} reviewCount={sellerRating.count} />
+                )}
               </div>
             </CardContent>
           </Card>
         </div>
       </div>
+
+      <section aria-labelledby="seller-reviews-heading" className="mt-12 max-w-3xl">
+        <h2 id="seller-reviews-heading" className="mb-4 text-2xl">
+          What buyers say about this seller
+        </h2>
+        <ReviewList reviews={recentReviews} emptyMessage="This seller has no reviews yet." />
+        {sellerRating.count > recentReviews.length ? (
+          <Link
+            href={`/shops/${product.seller.slug}`}
+            className="mt-4 inline-block text-sm font-semibold text-primary"
+          >
+            See all {sellerRating.count} reviews
+          </Link>
+        ) : null}
+      </section>
     </Container>
   );
 };
