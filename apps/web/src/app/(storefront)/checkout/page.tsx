@@ -12,7 +12,7 @@ import { requireRole } from "@/server/auth/guards";
 export const metadata: Metadata = { title: "Checkout" };
 
 const CheckoutPage = async () => {
-  const user = await requireRole([ROLES.BUYER, ROLES.SELLER], { nextPath: "/checkout" });
+  const user = await requireRole([ROLES.BUYER], { nextPath: "/checkout" });
   const cart = await cartService.getCart(user);
 
   if (cart.groups.length === 0 || cart.unavailableLines.length > 0) {

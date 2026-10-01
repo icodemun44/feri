@@ -44,7 +44,7 @@ const CartLineRow = ({ line }: { line: CartLine }) => (
 );
 
 const CartPage = async () => {
-  const user = await requireRole([ROLES.BUYER, ROLES.SELLER], { nextPath: "/cart" });
+  const user = await requireRole([ROLES.BUYER], { nextPath: "/cart" });
   const cart = await cartService.getCart(user);
   const hasItems = cart.groups.length > 0 || cart.unavailableLines.length > 0;
 

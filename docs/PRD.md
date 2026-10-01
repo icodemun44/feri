@@ -39,7 +39,7 @@ Second-hand trading in Nepal is scattered across informal channels (Facebook gro
 | Role            | Description                                                                              | How it is created                                                |
 | --------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
 | Buyer (default) | Any signed-up user. Browses, buys, reviews, and can apply to become a Seller.            | Self sign-up (email and password)                                |
-| Seller          | A Buyer whose application was approved. Lists products, fulfils orders, sees earnings.   | Buyer applies, Admin approves                                    |
+| Seller          | A Buyer whose application was approved. Lists and fulfils orders; cannot buy.            | Buyer applies, Admin approves                                    |
 | Admin           | Platform staff. Reviews seller applications, moderates, manages banners, sees analytics. | Created by a script (`pnpm admin:create`), never self-registered |
 
 A user's role always starts as Buyer. Approval of a seller application upgrades the role to Seller inside a single database transaction. The role is stored in the application database and is never read from anything the client can change.
@@ -49,8 +49,8 @@ A user's role always starts as Buyer. Approval of a seller application upgrades 
 | Capability                             | Buyer                | Seller (active) | Admin |
 | -------------------------------------- | -------------------- | --------------- | ----- |
 | Browse, search and filter the catalog  | Yes                  | Yes             | Yes   |
-| Place orders (cash on delivery)        | Yes                  | Yes             | -     |
-| Review products and sellers            | Yes (after delivery) | Yes             | -     |
+| Place orders (cash on delivery)        | Yes                  | -               | -     |
+| Review products and sellers            | Yes (after delivery) | -               | -     |
 | Apply to become a seller               | Yes                  | -               | -     |
 | See own seller application             | Yes                  | Yes             | -     |
 | Create and edit own listings           | -                    | Yes             | -     |

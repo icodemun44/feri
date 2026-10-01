@@ -75,7 +75,7 @@ export const SiteHeader = async () => {
 
         {user ? (
           <div className="ml-auto flex items-center gap-2 md:ml-0">
-            {user.role !== ROLES.ADMIN ? (
+            {user.role === ROLES.BUYER ? (
               <Link
                 href="/cart"
                 aria-label={cartItemCount > 0 ? `Cart, ${cartItemCount} items` : "Cart"}

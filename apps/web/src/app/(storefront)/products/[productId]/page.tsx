@@ -60,7 +60,7 @@ const PurchaseArea = ({
     return <Alert tone="info">This is your own listing.</Alert>;
   }
   if (!hasPermission(userRole, PERMISSIONS.ORDER_PLACE)) {
-    return <Alert tone="info">Admin accounts cannot place orders.</Alert>;
+    return <Alert tone="info">Only buyer accounts can place orders.</Alert>;
   }
   return <AddToCartButton productId={productId} isInCart={isInCart} />;
 };
