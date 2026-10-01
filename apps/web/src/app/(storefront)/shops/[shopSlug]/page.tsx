@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Store } from "lucide-react";
 import { Container } from "@feri/ui";
+import { Pagination } from "@/components/layout/pagination";
 import { StarRating } from "@/components/shared/star-rating";
 import { formatDate } from "@/lib/format";
 import { catalogService } from "@/modules/catalog/catalog.service";
@@ -14,6 +15,12 @@ const SHOP_REVIEW_COUNT = 20;
 
 type ShopPageProps = {
   params: Promise<{ shopSlug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+const parsePage = (value: string | string[] | undefined): number | undefined => {
+  const page = typeof value === "string" ? Number(value) : Number.NaN;
+  return Number.isInteger(page) ? page : undefined;
 };
 
 export const generateMetadata = async ({ params }: ShopPageProps): Promise<Metadata> => {
@@ -22,15 +29,16 @@ export const generateMetadata = async ({ params }: ShopPageProps): Promise<Metad
   return { title: shop?.businessName ?? "Shop not found" };
 };
 
-const ShopPage = async ({ params }: ShopPageProps) => {
+const ShopPage = async ({ params, searchParams }: ShopPageProps) => {
   const { shopSlug } = await params;
+  const page = parsePage((await searchParams)["page"]);
   const shop = await sellerService.findPublicShop(shopSlug);
   if (!shop) {
     notFound();
   }
 
   const [products, rating, reviews] = await Promise.all([
-    catalogService.listSellerProducts(shop.id),
+    catalogService.listSellerProducts(shop.id, page),
     reviewService.summarizeSeller(shop.id),
     reviewService.listRecentForSeller(shop.id, SHOP_REVIEW_COUNT),
   ]);
@@ -58,11 +66,18 @@ const ShopPage = async ({ params }: ShopPageProps) => {
       <section aria-labelledby="shop-items-heading">
         <h2 id="shop-items-heading" className="mb-5 text-2xl">
           Available now
+          <span className="ml-2 text-base font-normal text-muted">({products.totalItems})</span>
         </h2>
         <ProductGrid
-          products={products}
+          products={products.items}
           emptyTitle="Nothing for sale right now"
           emptyDescription="This shop has no items listed at the moment. Check back soon."
+        />
+        <Pagination
+          basePath={`/shops/${shop.slug}`}
+          page={products.page}
+          totalPages={products.totalPages}
+          queryParameters={{}}
         />
       </section>
 

@@ -25,7 +25,10 @@ export const ReviewForm = ({ orderItemId }: { orderItemId: string }) => {
         <legend className="text-sm font-semibold text-ink">Your rating</legend>
         <div className="flex items-center gap-1">
           {RATING_OPTIONS.map((rating) => (
-            <label key={rating} className="cursor-pointer rounded-md p-1 focus-within:outline-2">
+            <label
+              key={rating}
+              className="group/star cursor-pointer rounded-md p-1 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-primary"
+            >
               <input
                 type="radio"
                 name="rating"
@@ -39,7 +42,9 @@ export const ReviewForm = ({ orderItemId }: { orderItemId: string }) => {
                 aria-hidden="true"
                 className={cn(
                   "size-7 transition-colors",
-                  rating <= selectedRating ? "fill-accent text-accent" : "text-line-strong",
+                  rating <= selectedRating
+                    ? "fill-accent text-accent"
+                    : "text-muted group-hover/star:text-accent-strong",
                 )}
               />
             </label>

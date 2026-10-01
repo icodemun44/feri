@@ -93,16 +93,19 @@ const listLatestProducts = async (categorySlug?: string): Promise<ProductCardVie
   return rows.map(toProductCardView);
 };
 
-const listSellerProducts = async (sellerId: string): Promise<ProductCardView[]> => {
-  const window = resolvePaginationWindow({});
-  const { rows } = await catalogRepository.searchProducts({
+const listSellerProducts = async (
+  sellerId: string,
+  page: number | undefined,
+): Promise<PaginatedResult<ProductCardView>> => {
+  const window = resolvePaginationWindow({ page });
+  const { rows, totalItems } = await catalogRepository.searchProducts({
     searchText: undefined,
     categorySlug: undefined,
     sellerId,
     sort: PRODUCT_SORT_OPTIONS.NEWEST,
     window,
   });
-  return rows.map(toProductCardView);
+  return buildPaginatedResult(rows.map(toProductCardView), totalItems, window);
 };
 
 const getProductDetail = async (productId: string): Promise<ProductDetailView | null> => {

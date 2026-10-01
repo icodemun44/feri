@@ -188,11 +188,14 @@ const OrderPage = async ({ params }: OrderPageProps) => {
             <CardHeader>
               <CardTitle>Rate your purchase</CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-col gap-6">
+            <CardContent className="flex flex-col divide-y divide-line">
               {order.items.map((item) => {
                 const review = reviewsByOrderItemId[item.orderItemId];
                 return (
-                  <div key={item.orderItemId} className="flex flex-col gap-3">
+                  <div
+                    key={item.orderItemId}
+                    className="flex flex-col gap-3 py-6 first:pt-0 last:pb-0"
+                  >
                     <p className="font-semibold text-ink">{item.title}</p>
                     {review ? (
                       <ReviewList reviews={[review]} />

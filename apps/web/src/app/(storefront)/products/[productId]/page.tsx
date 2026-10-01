@@ -178,7 +178,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
               <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                 <Link
                   href={`/shops/${product.seller.slug}`}
-                  className="font-semibold text-ink hover:text-primary"
+                  className="font-semibold text-ink underline-offset-4 hover:text-primary hover:underline"
                 >
                   {product.seller.businessName}
                 </Link>
