@@ -14,9 +14,10 @@ Built with Next.js 16, React 19, TypeScript, Tailwind CSS 4, Prisma 7 and Supaba
 - Seller onboarding: apply, status page, admin review queue with phone-call notes, approve or reject, audit log
 - Seller dashboard with listings: create, edit, add photos, publish, mark as sold
 - Admin Listings section: check new listings after they go live, or remove them with a reason
+- Cart and checkout with cash on delivery (one order per seller), plus a buyer orders page with cancel
 - "Checked" tags on listings, with a clear banner on the product page
 
-Cart, checkout and orders are the next phases (see `docs/IMPLEMENTATION_PLAN.md`).
+Seller-side order handling (confirm, ship, deliver) is the next phase (see `docs/IMPLEMENTATION_PLAN.md`).
 
 ## Prerequisites
 

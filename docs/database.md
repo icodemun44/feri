@@ -13,13 +13,14 @@ Prisma is the **single source of truth** for the schema. Supabase is used for Au
 
 ## Tables
 
-`users`, `user_profiles`, `categories`, `seller_applications`, `sellers`, `products`, `product_images`, `orders`, `order_items`, `payments`, `reviews`, `banners`, `audit_logs`.
+`users`, `user_profiles`, `categories`, `seller_applications`, `sellers`, `products`, `product_images`, `cart_items`, `orders`, `order_items`, `payments`, `reviews`, `banners`, `audit_logs`.
 
 Key relationships:
 
 - A user has one profile, at most one seller profile, many seller applications, many orders, many reviews.
 - A seller application that is approved produces exactly one seller.
 - A product belongs to one seller and one category and has ordered images. It has a `status` (draft, active, sold, removed) and a separate `review_status` (pending or approved) that records whether an admin has checked it.
+- A cart item links one user to one product (unique together).
 - An order belongs to one buyer and **one seller**, has many items and one payment.
 - A review belongs to exactly one order item.
 

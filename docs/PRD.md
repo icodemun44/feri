@@ -105,25 +105,25 @@ Every step writes an audit log entry. A person can never have two open applicati
 
 ## 4. Functional requirements and status
 
-| Area              | Requirement                                                                                   | Status  |
-| ----------------- | --------------------------------------------------------------------------------------------- | ------- |
-| Accounts          | Email and password sign-up and login through Supabase Auth, session refresh, logout           | Built   |
-| Accounts          | Role-based access control enforced server-side and at the route level                         | Built   |
-| Catalog           | Categories, product list with keyword search, category filter, sorting and pagination         | Built   |
-| Catalog           | Product detail page with seller information                                                   | Built   |
-| Home page         | Auto-rotating hero banner carousel (pause, previous, next, reduced-motion aware)              | Built   |
-| Seller onboarding | Application form, status page, admin queue, phone-call notes, approve and reject              | Built   |
-| Audit             | Audit log for every seller application step                                                   | Built   |
-| Seller            | Seller dashboard shell                                                                        | Built   |
-| Seller            | Listing create, edit, publish, mark as sold and delete, with photo upload to Supabase Storage | Built   |
-| Admin             | Listings section: check new listings after they go live, or remove them with a reason         | Built   |
-| Catalog           | "Checked" and "Not yet checked" tags on cards and a clear banner on the product page          | Built   |
-| Cart and checkout | Cart, shipping address, cash on delivery order creation (one order per seller)                | Planned |
-| Orders            | Status tracking and seller fulfilment, COD collection confirmation                            | Planned |
-| Reviews           | Ratings and reviews after delivery                                                            | Planned |
-| Admin             | Banner management, category management, listing moderation, user management, analytics        | Planned |
-| Payments          | eSewa and Khalti integration                                                                  | Later   |
-| Notifications     | Email for application decisions and order confirmations                                       | Later   |
+| Area              | Requirement                                                                                         | Status  |
+| ----------------- | --------------------------------------------------------------------------------------------------- | ------- |
+| Accounts          | Email and password sign-up and login through Supabase Auth, session refresh, logout                 | Built   |
+| Accounts          | Role-based access control enforced server-side and at the route level                               | Built   |
+| Catalog           | Categories, product list with keyword search, category filter, sorting and pagination               | Built   |
+| Catalog           | Product detail page with seller information                                                         | Built   |
+| Home page         | Auto-rotating hero banner carousel (pause, previous, next, reduced-motion aware)                    | Built   |
+| Seller onboarding | Application form, status page, admin queue, phone-call notes, approve and reject                    | Built   |
+| Audit             | Audit log for every seller application step                                                         | Built   |
+| Seller            | Seller dashboard shell                                                                              | Built   |
+| Seller            | Listing create, edit, publish, mark as sold and delete, with photo upload to Supabase Storage       | Built   |
+| Admin             | Listings section: check new listings after they go live, or remove them with a reason               | Built   |
+| Catalog           | "Checked" and "Not yet checked" tags on cards and a clear banner on the product page                | Built   |
+| Cart and checkout | Cart, delivery address, cash on delivery orders (one order per seller), buyer order list and cancel | Built   |
+| Orders            | Seller fulfilment (confirm, ship, deliver) and COD collection confirmation                          | Planned |
+| Reviews           | Ratings and reviews after delivery                                                                  | Planned |
+| Admin             | Banner management, category management, listing moderation, user management, analytics              | Planned |
+| Payments          | eSewa and Khalti integration                                                                        | Later   |
+| Notifications     | Email for application decisions and order confirmations                                             | Later   |
 
 ---
 
