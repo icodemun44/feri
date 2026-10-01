@@ -20,6 +20,14 @@ export const cartProductSchema = z.object({ productId: uuidField });
 
 export const orderTargetSchema = z.object({ orderId: uuidField });
 
+const MAX_CANCELLATION_REASON_LENGTH = 300;
+
+export const sellerCancelOrderSchema = z.object({
+  orderId: uuidField,
+  reason: requiredText("Reason", MAX_CANCELLATION_REASON_LENGTH),
+});
+
 export type CheckoutInput = z.infer<typeof checkoutSchema>;
 export type CartProductInput = z.infer<typeof cartProductSchema>;
 export type OrderTargetInput = z.infer<typeof orderTargetSchema>;
+export type SellerCancelOrderInput = z.infer<typeof sellerCancelOrderSchema>;

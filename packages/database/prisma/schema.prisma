@@ -267,6 +267,7 @@ model Order {
   deliveryNotes       String?     @map("delivery_notes")
   placedAt            DateTime    @default(now()) @map("placed_at") @db.Timestamptz(6)
   cancelledAt         DateTime?   @map("cancelled_at") @db.Timestamptz(6)
+  cancellationReason  String?     @map("cancellation_reason")
   deliveredAt         DateTime?   @map("delivered_at") @db.Timestamptz(6)
   createdAt           DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt           DateTime    @updatedAt @map("updated_at") @db.Timestamptz(6)
