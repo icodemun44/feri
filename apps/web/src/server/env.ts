@@ -7,6 +7,7 @@ const environmentSchema = z.object({
   NEXT_PUBLIC_SUPABASE_URL: z.url(),
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().min(1),
   SUPABASE_INTERNAL_URL: z.preprocess(emptyToUndefined, z.url().optional()),
+  SUPABASE_SECRET_KEY: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
 });
 
 export type Environment = z.infer<typeof environmentSchema>;

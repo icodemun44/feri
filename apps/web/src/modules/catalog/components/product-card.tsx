@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { formatPaisa } from "@feri/shared";
 import { Badge } from "@feri/ui";
+import { ReviewTag } from "@/components/shared/review-tag";
 import { PRODUCT_CONDITION_LABELS } from "../catalog.constants";
 import type { ProductCardView } from "../catalog.types";
 import { CategoryIcon } from "./category-icon";
@@ -37,6 +38,7 @@ export const ProductCard = ({ product }: { product: ProductCardView }) => {
         <p className="text-lg font-semibold text-ink">{formatPaisa(product.priceMinor)}</p>
         <p className="line-clamp-1 text-sm text-body group-hover:underline">{product.title}</p>
         <p className="line-clamp-1 text-xs text-muted">{product.sellerName}</p>
+        <ReviewTag isChecked={product.isReviewed} className="mt-0.5" />
       </div>
     </Link>
   );

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronLeft, Store } from "lucide-react";
 import { formatPaisa } from "@feri/shared";
-import { Badge, Button, Card, CardContent, Container } from "@feri/ui";
+import { Alert, Badge, Button, Card, CardContent, Container } from "@feri/ui";
 import { formatDate } from "@/lib/format";
 import { catalogService } from "@/modules/catalog/catalog.service";
 import { PRODUCT_CONDITION_LABELS } from "@/modules/catalog/catalog.constants";
@@ -96,6 +96,17 @@ const ProductPage = async ({ params }: ProductPageProps) => {
               </div>
             ) : null}
           </dl>
+
+          {product.isReviewed ? (
+            <Alert tone="success" title="Checked by Feri Nepal">
+              Our team has looked at the photos and details of this listing.
+            </Alert>
+          ) : (
+            <Alert tone="info" title="Not checked yet">
+              This listing is live, but our team has not looked at it yet. Read the details and
+              photos closely. You pay only when it arrives.
+            </Alert>
+          )}
 
           <p className="whitespace-pre-line text-body">{product.description}</p>
 

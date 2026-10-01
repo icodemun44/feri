@@ -7,6 +7,7 @@ import { requireSeller } from "@/server/auth/guards";
 
 const SELLER_NAV_ITEMS: readonly DashboardNavItem[] = [
   { href: "/seller", label: "Overview", icon: "overview", exact: true },
+  { href: "/seller/listings", label: "Listings", icon: "listings" },
 ];
 
 const SellerLayout = async ({ children }: { children: ReactNode }) => {

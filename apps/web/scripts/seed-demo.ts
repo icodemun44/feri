@@ -1,6 +1,7 @@
 import {
   prisma,
   ProductCondition,
+  ProductReviewStatus,
   ProductStatus,
   Role,
   SellerApplicationStatus,
@@ -12,6 +13,10 @@ import { createAdminClient, ensureUser } from "./lib/auth-users";
 const LOCAL_SUPABASE_HOSTS = ["127.0.0.1", "localhost"];
 const DEMO_PASSWORD = "Password123!";
 const MILLISECONDS_PER_HOUR = 3_600_000;
+const UNCHECKED_DEMO_PRODUCT_TITLES: readonly string[] = [
+  "Bluetooth headphones",
+  "Hardcover novels, set of five",
+];
 
 const DEMO_ACCOUNTS = {
   admin: { email: "admin@feri.test", fullName: "Demo Admin", phone: "9800000001" },
@@ -190,6 +195,10 @@ const seedProducts = async (sellerId: string): Promise<number> => {
         priceMinor: rupeesToPaisa(product.priceRupees),
         condition: product.condition,
         status: ProductStatus.ACTIVE,
+        reviewStatus: UNCHECKED_DEMO_PRODUCT_TITLES.includes(product.title)
+          ? ProductReviewStatus.PENDING
+          : ProductReviewStatus.APPROVED,
+        reviewedAt: UNCHECKED_DEMO_PRODUCT_TITLES.includes(product.title) ? null : new Date(),
         brand: product.brand ?? null,
         size: product.size ?? null,
         publishedAt: new Date(now - index * MILLISECONDS_PER_HOUR),

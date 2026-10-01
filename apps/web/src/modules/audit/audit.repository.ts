@@ -7,10 +7,15 @@ export const AUDIT_ACTIONS = {
   SELLER_APPLICATION_CALL_RECORDED: "seller_application.call_recorded",
   SELLER_APPLICATION_APPROVED: "seller_application.approved",
   SELLER_APPLICATION_REJECTED: "seller_application.rejected",
+  PRODUCT_CREATED: "product.created",
+  PRODUCT_PUBLISHED: "product.published",
+  PRODUCT_APPROVED: "product.approved",
+  PRODUCT_REMOVED: "product.removed",
 } as const;
 
 export const AUDIT_ENTITY_TYPES = {
   SELLER_APPLICATION: "seller_application",
+  PRODUCT: "product",
 } as const;
 
 type AuditAction = (typeof AUDIT_ACTIONS)[keyof typeof AUDIT_ACTIONS];

@@ -1,8 +1,13 @@
 import "server-only";
-import { buildPaginatedResult, resolvePaginationWindow, type PaginatedResult } from "@feri/shared";
+import {
+  buildPaginatedResult,
+  PRODUCT_REVIEW_STATUSES,
+  resolvePaginationWindow,
+  type PaginatedResult,
+} from "@feri/shared";
 import { ProductStatus } from "@feri/database";
 import { PRODUCT_SORT_OPTIONS, uuidField, type ProductListQuery } from "@feri/validation";
-import { getEnv } from "@/server/env";
+import { buildPublicProductImageUrl } from "@/server/supabase/storage";
 import {
   catalogRepository,
   type ProductCardRow,
@@ -15,11 +20,7 @@ import type {
   ProductImageView,
 } from "./catalog.types";
 
-const PRODUCT_IMAGE_BUCKET = "product-images";
 const LATEST_PRODUCT_COUNT = 8;
-
-const buildImageUrl = (storagePath: string): string =>
-  `${getEnv().NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${PRODUCT_IMAGE_BUCKET}/${storagePath}`;
 
 const toProductCardView = (row: ProductCardRow): ProductCardView => {
   const [firstImage] = row.images;
@@ -31,7 +32,8 @@ const toProductCardView = (row: ProductCardRow): ProductCardView => {
     categoryName: row.category.name,
     categorySlug: row.category.slug,
     sellerName: row.seller.businessName,
-    imageUrl: firstImage ? buildImageUrl(firstImage.storagePath) : null,
+    isReviewed: row.reviewStatus === PRODUCT_REVIEW_STATUSES.APPROVED,
+    imageUrl: firstImage ? buildPublicProductImageUrl(firstImage.storagePath) : null,
     imageAlt: firstImage?.altText ?? row.title,
   };
 };
@@ -45,10 +47,11 @@ const toProductDetailView = (row: ProductDetailRow): ProductDetailView => ({
   brand: row.brand,
   size: row.size,
   isSold: row.status === ProductStatus.SOLD,
+  isReviewed: row.reviewStatus === PRODUCT_REVIEW_STATUSES.APPROVED,
   categoryName: row.category.name,
   categorySlug: row.category.slug,
   images: row.images.map((image): ProductImageView => ({
-    url: buildImageUrl(image.storagePath),
+    url: buildPublicProductImageUrl(image.storagePath),
     alt: image.altText ?? row.title,
   })),
   seller: {

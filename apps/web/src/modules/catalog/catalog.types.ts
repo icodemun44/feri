@@ -15,6 +15,7 @@ export type ProductCardView = {
   categoryName: string;
   categorySlug: string;
   sellerName: string;
+  isReviewed: boolean;
   imageUrl: string | null;
   imageAlt: string;
 };
@@ -33,6 +34,7 @@ export type ProductDetailView = {
   brand: string | null;
   size: string | null;
   isSold: boolean;
+  isReviewed: boolean;
   categoryName: string;
   categorySlug: string;
   images: ProductImageView[];
