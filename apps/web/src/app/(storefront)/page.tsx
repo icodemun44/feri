@@ -1,11 +1,9 @@
-import Link from "next/link";
 import { BadgeCheck, HandCoins, MapPin } from "lucide-react";
 import { Container } from "@feri/ui";
 import { bannerService } from "@/modules/banners/banner.service";
 import { HeroCarousel } from "@/modules/banners/components/hero-carousel";
 import { catalogService } from "@/modules/catalog/catalog.service";
-import { CategoryChips } from "@/modules/catalog/components/category-chips";
-import { ProductGrid } from "@/modules/catalog/components/product-grid";
+import { CategoryProductShowcase } from "@/modules/catalog/components/category-product-showcase";
 
 const TRUST_POINTS = [
   {
@@ -25,33 +23,28 @@ const TRUST_POINTS = [
   },
 ] as const;
 
-const HomePage = async () => {
-  const [banners, categories, latestProducts] = await Promise.all([
+type HomePageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+const HomePage = async ({ searchParams }: HomePageProps) => {
+  const { category } = await searchParams;
+  const [banners, categories] = await Promise.all([
     bannerService.listActiveBannersOrEmpty(),
     catalogService.listCategories(),
-    catalogService.listLatestProducts(),
   ]);
+  const initialCategorySlug = categories.find((candidate) => candidate.slug === category)?.slug;
+  const initialProducts = await catalogService.listLatestProducts(initialCategorySlug);
 
   return (
     <Container className="flex flex-col gap-10 py-6 sm:py-8">
       <HeroCarousel slides={banners} />
 
-      <CategoryChips categories={categories} />
-
-      <section aria-labelledby="latest-heading" className="flex flex-col gap-5">
-        <div className="flex items-end justify-between gap-4">
-          <h2 id="latest-heading" className="text-2xl">
-            Fresh finds
-          </h2>
-          <Link
-            href="/products"
-            className="text-sm font-semibold text-primary underline underline-offset-4"
-          >
-            See everything
-          </Link>
-        </div>
-        <ProductGrid products={latestProducts} />
-      </section>
+      <CategoryProductShowcase
+        categories={categories}
+        initialCategorySlug={initialCategorySlug}
+        initialProducts={initialProducts}
+      />
 
       <section aria-label="Why shop with us">
         <ul className="grid gap-4 sm:grid-cols-3">

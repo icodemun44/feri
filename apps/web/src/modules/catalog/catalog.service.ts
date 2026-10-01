@@ -77,11 +77,11 @@ const searchProducts = async ({
   return buildPaginatedResult(rows.map(toProductCardView), totalItems, window);
 };
 
-const listLatestProducts = async (): Promise<ProductCardView[]> => {
+const listLatestProducts = async (categorySlug?: string): Promise<ProductCardView[]> => {
   const window = resolvePaginationWindow({ pageSize: LATEST_PRODUCT_COUNT });
   const { rows } = await catalogRepository.searchProducts({
     searchText: undefined,
-    categorySlug: undefined,
+    categorySlug: categorySlug || undefined,
     sort: PRODUCT_SORT_OPTIONS.NEWEST,
     window,
   });
