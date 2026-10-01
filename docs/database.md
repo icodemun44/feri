@@ -19,7 +19,7 @@ Key relationships:
 
 - A user has one profile, at most one seller profile, many seller applications, many orders, many reviews.
 - A seller application that is approved produces exactly one seller.
-- A product belongs to one seller and one category and has ordered images.
+- A product belongs to one seller and one category and has ordered images. It has a `status` (draft, active, sold, removed) and a separate `review_status` (pending or approved) that records whether an admin has checked it.
 - An order belongs to one buyer and **one seller**, has many items and one payment.
 - A review belongs to exactly one order item.
 

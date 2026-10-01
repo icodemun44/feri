@@ -57,7 +57,7 @@ See `architecture.md` for the layering rules.
 | 1     | Authentication and role-based access (routes, guards, permissions)                                  | Done    |
 | 2     | Catalog read: categories, product list with search and filters, product detail, home page, banners  | Done    |
 | 3     | Seller application workflow: apply, status, admin queue, call notes, approve and reject             | Done    |
-| 4     | Seller listings: create, edit, publish, image upload to Storage                                     | Next    |
+| 4     | Seller listings: create, edit, publish, photo upload to Storage, admin check of new listings        | Done    |
 | 5     | Cart and checkout: address form, one order per seller, COD payment record                           | Planned |
 | 6     | Order management: seller fulfilment, status tracking, COD collection                                | Planned |
 | 7     | Reviews and seller ratings                                                                          | Planned |
