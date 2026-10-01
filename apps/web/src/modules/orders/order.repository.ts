@@ -2,14 +2,20 @@ import "server-only";
 import {
   prisma,
   type Prisma,
+  OrderStatus,
   PaymentMethod,
   PaymentStatus,
   ProductStatus,
   type DbClient,
-  type OrderStatus,
 } from "@feri/database";
 import { buildPublicProductImageUrl } from "@/server/supabase/storage";
-import type { OrderDetail, OrderSummary, PlacedOrder } from "./order.types";
+import type {
+  OrderDetail,
+  OrderSummary,
+  PlacedOrder,
+  SellerOrderCounts,
+  SellerOrderView,
+} from "./order.types";
 
 const summarySelection = {
   id: true,
@@ -17,6 +23,7 @@ const summarySelection = {
   status: true,
   totalMinor: true,
   placedAt: true,
+  shippingFullName: true,
   seller: { select: { businessName: true } },
   items: {
     select: {
@@ -35,6 +42,7 @@ const detailSelection = {
   status: true,
   placedAt: true,
   cancelledAt: true,
+  cancellationReason: true,
   deliveredAt: true,
   subtotalMinor: true,
   deliveryFeeMinor: true,
@@ -77,6 +85,7 @@ const toSummary = (row: SummaryRow): OrderSummary => ({
   totalMinor: row.totalMinor,
   placedAt: row.placedAt,
   sellerName: row.seller.businessName,
+  buyerName: row.shippingFullName,
   itemCount: row.items.length,
   coverImageUrl: firstImageUrl(row.items[0]?.product.images ?? []),
 });
@@ -87,6 +96,7 @@ const toDetail = (row: DetailRow): OrderDetail => ({
   status: row.status,
   placedAt: row.placedAt,
   cancelledAt: row.cancelledAt,
+  cancellationReason: row.cancellationReason,
   deliveredAt: row.deliveredAt,
   sellerName: row.seller.businessName,
   sellerPhone: row.seller.contactPhone,
@@ -185,18 +195,73 @@ const findForBuyer = async (
   return row ? toDetail(row) : null;
 };
 
+const OPEN_ORDER_STATUSES: readonly OrderStatus[] = [
+  OrderStatus.PLACED,
+  OrderStatus.CONFIRMED,
+  OrderStatus.SHIPPED,
+];
+
+const listForSeller = async (
+  sellerId: string,
+  view: SellerOrderView,
+  db: DbClient = prisma,
+): Promise<OrderSummary[]> => {
+  const rows = await db.order.findMany({
+    where: {
+      sellerId,
+      status:
+        view === "open" ? { in: [...OPEN_ORDER_STATUSES] } : { notIn: [...OPEN_ORDER_STATUSES] },
+    },
+    orderBy: { placedAt: view === "open" ? "asc" : "desc" },
+    select: summarySelection,
+  });
+  return rows.map(toSummary);
+};
+
+const findForSeller = async (
+  orderId: string,
+  sellerId: string,
+  db: DbClient = prisma,
+): Promise<OrderDetail | null> => {
+  const row = await db.order.findFirst({
+    where: { id: orderId, sellerId },
+    select: detailSelection,
+  });
+  return row ? toDetail(row) : null;
+};
+
+const countForSeller = async (
+  sellerId: string,
+  db: DbClient = prisma,
+): Promise<SellerOrderCounts> => {
+  const [toConfirm, toShip, toDeliver] = await Promise.all([
+    db.order.count({ where: { sellerId, status: OrderStatus.PLACED } }),
+    db.order.count({ where: { sellerId, status: OrderStatus.CONFIRMED } }),
+    db.order.count({ where: { sellerId, status: OrderStatus.SHIPPED } }),
+  ]);
+  return { toConfirm, toShip, toDeliver };
+};
+
+type TransitionInput = {
+  id: string;
+  from: readonly OrderStatus[];
+  data: Prisma.OrderUncheckedUpdateManyInput;
+  buyerId?: string;
+  sellerId?: string;
+};
+
 const transition = async (
-  input: {
-    id: string;
-    buyerId: string;
-    from: readonly OrderStatus[];
-    data: Prisma.OrderUncheckedUpdateManyInput;
-  },
+  { id, from, data, buyerId, sellerId }: TransitionInput,
   db: DbClient = prisma,
 ): Promise<boolean> => {
   const { count } = await db.order.updateMany({
-    where: { id: input.id, buyerId: input.buyerId, status: { in: [...input.from] } },
-    data: input.data,
+    where: {
+      id,
+      status: { in: [...from] },
+      ...(buyerId ? { buyerId } : {}),
+      ...(sellerId ? { sellerId } : {}),
+    },
+    data,
   });
   return count === 1;
 };
@@ -210,6 +275,13 @@ const markPaymentNotCollected = async (orderId: string, db: DbClient = prisma): 
   await db.payment.updateMany({
     where: { orderId },
     data: { status: PaymentStatus.FAILED },
+  });
+};
+
+const markPaymentCollected = async (orderId: string, db: DbClient = prisma): Promise<void> => {
+  await db.payment.updateMany({
+    where: { orderId, status: PaymentStatus.PENDING },
+    data: { status: PaymentStatus.COMPLETED, completedAt: new Date() },
   });
 };
 
@@ -238,9 +310,13 @@ export const orderRepository = {
   create,
   listForBuyer,
   findForBuyer,
+  listForSeller,
+  findForSeller,
+  countForSeller,
   transition,
   listProductIds,
   markPaymentNotCollected,
+  markPaymentCollected,
   reserveProducts,
   releaseProducts,
 };

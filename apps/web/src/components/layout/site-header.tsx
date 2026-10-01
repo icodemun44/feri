@@ -25,7 +25,12 @@ const buildNavItems = (user: AppUser | null): HeaderNavItem[] => {
     items.push({ href: "/admin", label: "Admin", icon: "admin", activePrefixes: ["/admin"] });
   }
   if (user && user.role !== ROLES.ADMIN) {
-    items.push({ href: "/orders", label: "Orders", icon: "orders", activePrefixes: ["/orders"] });
+    items.push({
+      href: "/orders",
+      label: user.role === ROLES.SELLER ? "Purchases" : "Orders",
+      icon: "orders",
+      activePrefixes: ["/orders"],
+    });
   }
   if (!user || user.role === ROLES.BUYER) {
     items.push({ href: "/sell", label: "Sell", icon: "sell", activePrefixes: ["/sell"] });

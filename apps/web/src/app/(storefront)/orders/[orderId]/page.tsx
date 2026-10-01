@@ -11,7 +11,7 @@ import {
   ROLES,
 } from "@feri/shared";
 import { uuidField } from "@feri/validation";
-import { Card, CardContent, CardHeader, CardTitle, Container, cn } from "@feri/ui";
+import { Alert, Card, CardContent, CardHeader, CardTitle, Container, cn } from "@feri/ui";
 import { formatDateTime } from "@/lib/format";
 import { CancelOrderButton } from "@/modules/orders/components/cancel-order-button";
 import { OrderStatusBadge } from "@/modules/orders/components/order-status-badge";
@@ -73,6 +73,12 @@ const OrderPage = async ({ params }: OrderPageProps) => {
       </p>
 
       <div className="flex flex-col gap-5">
+        {isCancelled && order.cancellationReason ? (
+          <Alert tone="warning" title="This order was cancelled by the seller">
+            {order.cancellationReason}
+          </Alert>
+        ) : null}
+
         {isCancelled ? null : (
           <ol className="grid grid-cols-4 gap-2" aria-label="Order progress">
             {ORDER_PROGRESS_STEPS.map((step, index) => {

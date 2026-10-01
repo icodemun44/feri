@@ -1,6 +1,6 @@
 # orders
 
-**Purpose:** turning a cart into orders (cash on delivery) and letting buyers follow or cancel them.
+**Purpose:** turning a cart into orders (cash on delivery), letting buyers follow or cancel them, and letting sellers fulfil them.
 
 **Structure**
 
@@ -8,8 +8,9 @@
 - `order.constants.ts` - status and payment labels, the progress steps shown to buyers.
 - `order.repository.ts` - Prisma access, including reserving and releasing products.
 - `order.service.ts` - `placeFromCart`, `listMine`, `getMine`, `cancelMine`.
-- `order.actions.ts` - Server Actions for placing and cancelling.
-- `components/` - `CheckoutForm`, `CancelOrderButton`, `OrderStatusBadge`.
+- `order.actions.ts` - Server Actions for placing and cancelling (buyer).
+- `order-fulfilment.service.ts` and `order-fulfilment.actions.ts` - the seller side: list and view own orders, confirm, ship, mark delivered, cancel with a reason.
+- `components/` - `CheckoutForm`, `CancelOrderButton`, `OrderStatusBadge`, `SellerOrderActions`.
 
 **Funnel**
 
@@ -23,4 +24,7 @@
 - Cancelling an order puts the items back on sale and marks the payment as not collected.
 - The delivery address, item titles and prices are copied onto the order, so later edits to a listing or profile never change a past order.
 - Payment is cash on delivery only for now. The payment row already has a method and status so online payments can be added later without a schema change.
-- Seller-side handling (confirm, ship, mark delivered, record cash collected) is the next phase. Until then orders stay "Placed".
+- Seller flow: Orders in the seller dashboard show what needs doing. The order page offers one next step at a time: Confirm, then Mark as shipped, then "Delivered and cash collected". The last step also marks the cash on delivery payment as completed. Sellers can cancel before shipping, with a reason the buyer can read.
+- The allowed order steps are defined once in `@feri/shared` (`canTransitionOrder`). Every change is a guarded update on the current status, so two quick clicks cannot move an order twice.
+- A buyer can cancel only while the order is still "Placed". Once the seller confirms it, only the seller can cancel.
+- Items of a delivered order stay sold. Items of a cancelled order go back on sale.

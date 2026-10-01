@@ -1,37 +1,48 @@
 import type { Metadata } from "next";
-import { PackagePlus, ShoppingBag } from "lucide-react";
+import Link from "next/link";
+import { PackagePlus } from "lucide-react";
 import { SellerStatus } from "@feri/database";
-import { Alert, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@feri/ui";
+import { PRODUCT_STATUSES } from "@feri/shared";
+import { Alert, Button, Card, CardContent } from "@feri/ui";
 import { PageHeading } from "@/components/layout/page-heading";
+import { listingService } from "@/modules/listings/listing.service";
+import { orderFulfilmentService } from "@/modules/orders/order-fulfilment.service";
 import { sellerRepository } from "@/modules/sellers/seller.repository";
 import { requireSeller } from "@/server/auth/guards";
 
 export const metadata: Metadata = { title: "Seller dashboard" };
 
-const NEXT_STEPS = [
-  {
-    icon: PackagePlus,
-    title: "Listings",
-    description:
-      "Add your first items with photos, a price and the condition. Coming in the next release.",
-  },
-  {
-    icon: ShoppingBag,
-    title: "Orders",
-    description:
-      "Confirm and ship the orders buyers place, paid in cash on delivery. Coming in the next release.",
-  },
-] as const;
-
 const SellerOverviewPage = async () => {
   const user = await requireSeller("/seller");
-  const seller = await sellerRepository.findByUserId(user.id);
+  const [seller, orderCounts, listings] = await Promise.all([
+    sellerRepository.findByUserId(user.id),
+    orderFulfilmentService.countForSeller(user),
+    listingService.listMine(user),
+  ]);
+  const liveListingCount = listings.filter(
+    (listing) => listing.status === PRODUCT_STATUSES.ACTIVE,
+  ).length;
+
+  const statCards = [
+    { label: "New orders to confirm", value: orderCounts.toConfirm, href: "/seller/orders" },
+    { label: "Ready to ship", value: orderCounts.toShip, href: "/seller/orders" },
+    { label: "On the way to buyers", value: orderCounts.toDeliver, href: "/seller/orders" },
+    { label: "Live listings", value: liveListingCount, href: "/seller/listings" },
+  ];
 
   return (
     <>
       <PageHeading
         title={seller ? seller.businessName : "Your shop"}
-        description="Your application was approved. Here is what comes next."
+        description="Here is what needs your attention today."
+        action={
+          <Button asChild variant="accent">
+            <Link href="/seller/listings/new">
+              <PackagePlus aria-hidden="true" className="size-4" />
+              New listing
+            </Link>
+          </Button>
+        }
       />
 
       {seller?.status === SellerStatus.SUSPENDED ? (
@@ -40,20 +51,23 @@ const SellerOverviewPage = async () => {
         </Alert>
       ) : null}
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        {NEXT_STEPS.map(({ icon: Icon, title, description }) => (
-          <Card key={title}>
-            <CardHeader>
-              <span className="mb-2 flex size-10 items-center justify-center rounded-full bg-primary-soft text-primary">
-                <Icon aria-hidden="true" className="size-5" />
-              </span>
-              <CardTitle>{title}</CardTitle>
-              <CardDescription>{description}</CardDescription>
-            </CardHeader>
-            <CardContent />
+      <dl className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        {statCards.map(({ label, value, href }) => (
+          <Card key={label}>
+            <CardContent className="flex flex-col gap-1">
+              <dt className="text-sm text-muted">{label}</dt>
+              <dd>
+                <Link
+                  href={href}
+                  className="font-display text-4xl font-semibold text-ink hover:underline"
+                >
+                  {value}
+                </Link>
+              </dd>
+            </CardContent>
           </Card>
         ))}
-      </div>
+      </dl>
     </>
   );
 };

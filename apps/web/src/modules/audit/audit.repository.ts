@@ -12,6 +12,9 @@ export const AUDIT_ACTIONS = {
   PRODUCT_APPROVED: "product.approved",
   PRODUCT_REMOVED: "product.removed",
   ORDER_PLACED: "order.placed",
+  ORDER_CONFIRMED: "order.confirmed",
+  ORDER_SHIPPED: "order.shipped",
+  ORDER_DELIVERED: "order.delivered",
   ORDER_CANCELLED: "order.cancelled",
 } as const;
 

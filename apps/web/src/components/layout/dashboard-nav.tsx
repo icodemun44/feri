@@ -2,13 +2,20 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ClipboardCheck, LayoutDashboard, Package, type LucideIcon } from "lucide-react";
+import {
+  ClipboardCheck,
+  LayoutDashboard,
+  Package,
+  ReceiptText,
+  type LucideIcon,
+} from "lucide-react";
 import { cn } from "@feri/ui";
 
 const DASHBOARD_ICONS = {
   overview: LayoutDashboard,
   applications: ClipboardCheck,
   listings: Package,
+  orders: ReceiptText,
 } as const satisfies Record<string, LucideIcon>;
 
 export type DashboardIconName = keyof typeof DASHBOARD_ICONS;

@@ -7,6 +7,7 @@ export type OrderSummary = {
   totalMinor: number;
   placedAt: Date;
   sellerName: string;
+  buyerName: string;
   itemCount: number;
   coverImageUrl: string | null;
 };
@@ -24,6 +25,7 @@ export type OrderDetail = {
   status: OrderStatus;
   placedAt: Date;
   cancelledAt: Date | null;
+  cancellationReason: string | null;
   deliveredAt: Date | null;
   sellerName: string;
   sellerPhone: string;
@@ -41,6 +43,14 @@ export type OrderDetail = {
   };
   payment: { method: PaymentMethod; status: PaymentStatus } | null;
 };
+
+export type SellerOrderCounts = {
+  toConfirm: number;
+  toShip: number;
+  toDeliver: number;
+};
+
+export type SellerOrderView = "open" | "closed";
 
 export type PlacedOrder = {
   id: string;
