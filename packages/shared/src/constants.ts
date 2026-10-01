@@ -17,3 +17,5 @@ export const MAX_LISTING_PRICE_RUPEES = 10_000_000;
 export const MIN_PASSWORD_LENGTH = 8;
 
 export const FLAT_DELIVERY_FEE_PAISA = 10_000;
+export const MAX_CART_ITEMS = 30;
+export const ORDER_NUMBER_PREFIX = "FN-";

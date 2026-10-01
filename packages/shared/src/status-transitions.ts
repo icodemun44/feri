@@ -55,7 +55,7 @@ const ORDER_TRANSITIONS: TransitionMap<OrderStatus> = {
 const PRODUCT_TRANSITIONS: TransitionMap<ProductStatus> = {
   DRAFT: ["ACTIVE", "REMOVED"],
   ACTIVE: ["DRAFT", "SOLD", "REMOVED"],
-  SOLD: ["REMOVED"],
+  SOLD: ["ACTIVE", "REMOVED"],
   REMOVED: [],
 };
 
