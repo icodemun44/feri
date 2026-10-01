@@ -62,6 +62,6 @@ Rules that prevent migration trouble:
 
 ## Seeding
 
-- `pnpm db:seed` creates the five categories and three banners. It is safe to run repeatedly.
-- `pnpm demo:seed` (local Supabase only) creates demo accounts and 12 products. Accounts: `admin@feri.test`, `seller@feri.test`, `buyer@feri.test`, password `Password123!`.
+- `pnpm db:seed` creates the six categories and three banners. It is safe to run repeatedly.
+- `pnpm demo:seed` (local Supabase only) creates demo accounts and 77 products with photos from `apps/web/scripts/demo-catalog`. Safe to run repeatedly. Accounts: `admin@feri.test`, `seller@feri.test`, `buyer@feri.test`, password `Password123!`.
 - `pnpm admin:create -- --email you@example.com --password '...' --name 'Your Name'` creates or promotes a real admin.

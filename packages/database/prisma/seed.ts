@@ -8,6 +8,11 @@ const CATEGORIES = [
     description: "Jackets, dresses, shirts and everyday wear with plenty of life left.",
   },
   {
+    name: "Shoes",
+    slug: "shoes",
+    description: "Sneakers, boots, heels and loafers with plenty of steps left.",
+  },
+  {
     name: "Watches",
     slug: "watches",
     description: "Pre-owned wrist watches, from vintage classics to daily wearers.",
@@ -25,7 +30,7 @@ const CATEGORIES = [
   {
     name: "Other",
     slug: "other",
-    description: "Home goods, books and other finds that deserve a second home.",
+    description: "Perfumes, jewellery, hats and other finds that deserve a second home.",
   },
 ] as const;
 

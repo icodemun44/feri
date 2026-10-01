@@ -1,6 +1,5 @@
 import {
   prisma,
-  ProductCondition,
   ProductReviewStatus,
   ProductStatus,
   Role,
@@ -8,123 +7,40 @@ import {
   SellerStatus,
 } from "@feri/database";
 import { rupeesToPaisa } from "@feri/shared";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { randomUUID } from "node:crypto";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+import { DEMO_CATALOG_PRODUCTS } from "./demo-catalog/products";
 import { createAdminClient, ensureUser } from "./lib/auth-users";
 
 const LOCAL_SUPABASE_HOSTS = ["127.0.0.1", "localhost"];
 const DEMO_PASSWORD = "Password123!";
 const MILLISECONDS_PER_HOUR = 3_600_000;
-const UNCHECKED_DEMO_PRODUCT_TITLES: readonly string[] = [
+const UNCHECKED_DEMO_PRODUCT_TITLES: readonly string[] = ["Headphones", "Leather cap"];
+const LEGACY_DEMO_PRODUCT_TITLES = [
+  "Vintage denim jacket",
+  "Wool overcoat, charcoal",
+  "Floral summer dress",
+  "Casio vintage digital watch",
+  "Analog field watch",
+  "Leather sling bag",
+  "Canvas backpack, olive",
+  "Mechanical keyboard",
   "Bluetooth headphones",
+  "Android phone, 64GB",
+  "Ceramic mug set of four",
   "Hardcover novels, set of five",
-];
+] as const;
+const PRODUCT_IMAGE_BUCKET = "product-images";
+const JPEG_CONTENT_TYPE = "image/jpeg";
+const DEMO_IMAGES_DIRECTORY = join(import.meta.dirname, "demo-catalog", "images");
 
 const DEMO_ACCOUNTS = {
   admin: { email: "admin@feri.test", fullName: "Demo Admin", phone: "9800000001" },
   seller: { email: "seller@feri.test", fullName: "Maya Gurung", phone: "9800000002" },
   buyer: { email: "buyer@feri.test", fullName: "Aayush Shrestha", phone: "9800000003" },
 } as const;
-
-type DemoProduct = {
-  title: string;
-  description: string;
-  priceRupees: number;
-  condition: ProductCondition;
-  categorySlug: string;
-  brand?: string;
-  size?: string;
-};
-
-const DEMO_PRODUCTS: readonly DemoProduct[] = [
-  {
-    title: "Vintage denim jacket",
-    description: "Classic 90s cut, softly worn in. No stains or tears. Smoke-free home.",
-    priceRupees: 1450,
-    condition: ProductCondition.LIKE_NEW,
-    categorySlug: "clothes",
-    brand: "Levi's",
-    size: "M",
-  },
-  {
-    title: "Wool overcoat, charcoal",
-    description: "Warm mid-length coat, lined, barely worn for one winter.",
-    priceRupees: 2800,
-    condition: ProductCondition.LIKE_NEW,
-    categorySlug: "clothes",
-    size: "L",
-  },
-  {
-    title: "Floral summer dress",
-    description: "Light cotton dress with pockets. Washed and ready to wear.",
-    priceRupees: 900,
-    condition: ProductCondition.GOOD,
-    categorySlug: "clothes",
-    size: "S",
-  },
-  {
-    title: "Casio vintage digital watch",
-    description: "Runs perfectly, new battery. Small scratches on the strap.",
-    priceRupees: 2200,
-    condition: ProductCondition.GOOD,
-    categorySlug: "watches",
-    brand: "Casio",
-  },
-  {
-    title: "Analog field watch",
-    description: "Stainless steel case, canvas strap, tested for a week.",
-    priceRupees: 3100,
-    condition: ProductCondition.LIKE_NEW,
-    categorySlug: "watches",
-  },
-  {
-    title: "Leather sling bag",
-    description: "Real leather, adjustable strap, two zip pockets. Some wear at the corners.",
-    priceRupees: 990,
-    condition: ProductCondition.FAIR,
-    categorySlug: "bags",
-  },
-  {
-    title: "Canvas backpack, olive",
-    description: "Roomy 25L bag with laptop sleeve. All zips work.",
-    priceRupees: 1200,
-    condition: ProductCondition.GOOD,
-    categorySlug: "bags",
-  },
-  {
-    title: "Mechanical keyboard",
-    description: "Tenkeyless, brown switches, USB-C cable included.",
-    priceRupees: 3500,
-    condition: ProductCondition.GOOD,
-    categorySlug: "tech",
-  },
-  {
-    title: "Bluetooth headphones",
-    description: "Over-ear, good battery life, cushions recently replaced.",
-    priceRupees: 2600,
-    condition: ProductCondition.GOOD,
-    categorySlug: "tech",
-  },
-  {
-    title: "Android phone, 64GB",
-    description: "Screen protector since day one, battery health still strong.",
-    priceRupees: 11500,
-    condition: ProductCondition.GOOD,
-    categorySlug: "tech",
-  },
-  {
-    title: "Ceramic mug set of four",
-    description: "Hand-glazed mugs, no chips.",
-    priceRupees: 550,
-    condition: ProductCondition.NEW,
-    categorySlug: "other",
-  },
-  {
-    title: "Hardcover novels, set of five",
-    description: "Well-kept favourites in English.",
-    priceRupees: 750,
-    condition: ProductCondition.GOOD,
-    categorySlug: "other",
-  },
-];
 
 const assertLocalSupabase = (): void => {
   const url = process.env["NEXT_PUBLIC_SUPABASE_URL"] ?? "";
@@ -171,23 +87,56 @@ const seedSeller = async (sellerUserId: string): Promise<string> => {
   return seller.id;
 };
 
-const seedProducts = async (sellerId: string): Promise<number> => {
-  const existingProductCount = await prisma.product.count({ where: { sellerId } });
-  if (existingProductCount > 0) {
-    return 0;
+const removeLegacyDemoProducts = async (sellerId: string): Promise<void> => {
+  await prisma.product.deleteMany({
+    where: { sellerId, title: { in: [...LEGACY_DEMO_PRODUCT_TITLES] }, orderItems: { none: {} } },
+  });
+};
+
+const uploadDemoImage = async (
+  supabase: SupabaseClient,
+  storagePath: string,
+  imagePath: string,
+): Promise<void> => {
+  const imageBytes = await readFile(join(DEMO_IMAGES_DIRECTORY, `${imagePath}.jpg`));
+  const { error } = await supabase.storage
+    .from(PRODUCT_IMAGE_BUCKET)
+    .upload(storagePath, imageBytes, { contentType: JPEG_CONTENT_TYPE, upsert: true });
+  if (error) {
+    throw new Error(`Could not upload ${imagePath}: ${error.message}`);
   }
+};
+
+const seedProducts = async (supabase: SupabaseClient, sellerId: string): Promise<number> => {
+  await removeLegacyDemoProducts(sellerId);
 
   const categories = await prisma.category.findMany({ select: { id: true, slug: true } });
   const categoryIdBySlug = new Map(categories.map((category) => [category.slug, category.id]));
+  const existingProducts = await prisma.product.findMany({
+    where: { sellerId },
+    select: { title: true },
+  });
+  const existingTitles = new Set(existingProducts.map((product) => product.title));
 
   const now = Date.now();
-  const products = DEMO_PRODUCTS.flatMap((product, index) => {
+  let createdCount = 0;
+  for (const [index, product] of DEMO_CATALOG_PRODUCTS.entries()) {
     const categoryId = categoryIdBySlug.get(product.categorySlug);
     if (!categoryId) {
-      return [];
+      throw new Error(`Category "${product.categorySlug}" is missing. Run pnpm db:seed first.`);
     }
-    return [
-      {
+    if (existingTitles.has(product.title)) {
+      continue;
+    }
+
+    const productId = randomUUID();
+    const storagePath = `${sellerId}/${productId}/${randomUUID()}.jpg`;
+    await uploadDemoImage(supabase, storagePath, product.imagePath);
+
+    const isUnchecked = UNCHECKED_DEMO_PRODUCT_TITLES.includes(product.title);
+    await prisma.product.create({
+      data: {
+        id: productId,
         sellerId,
         categoryId,
         title: product.title,
@@ -195,19 +144,16 @@ const seedProducts = async (sellerId: string): Promise<number> => {
         priceMinor: rupeesToPaisa(product.priceRupees),
         condition: product.condition,
         status: ProductStatus.ACTIVE,
-        reviewStatus: UNCHECKED_DEMO_PRODUCT_TITLES.includes(product.title)
-          ? ProductReviewStatus.PENDING
-          : ProductReviewStatus.APPROVED,
-        reviewedAt: UNCHECKED_DEMO_PRODUCT_TITLES.includes(product.title) ? null : new Date(),
+        reviewStatus: isUnchecked ? ProductReviewStatus.PENDING : ProductReviewStatus.APPROVED,
+        reviewedAt: isUnchecked ? null : new Date(),
         brand: product.brand ?? null,
-        size: product.size ?? null,
         publishedAt: new Date(now - index * MILLISECONDS_PER_HOUR),
+        images: { create: { storagePath, altText: product.title, position: 0 } },
       },
-    ];
-  });
-
-  const { count } = await prisma.product.createMany({ data: products });
-  return count;
+    });
+    createdCount += 1;
+  }
+  return createdCount;
 };
 
 const main = async (): Promise<void> => {
@@ -223,7 +169,7 @@ const main = async (): Promise<void> => {
   });
 
   const sellerId = await seedSeller(seller.id);
-  const createdProducts = await seedProducts(sellerId);
+  const createdProducts = await seedProducts(supabase, sellerId);
 
   console.log(`Demo data ready (${createdProducts} products created).`);
   console.log(`Log in with any of these accounts, password: ${DEMO_PASSWORD}`);

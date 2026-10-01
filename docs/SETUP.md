@@ -137,7 +137,7 @@ pnpm demo:seed
 
 - `db:deploy` creates the database tables.
 - `db:seed` adds the five categories and the home page banners.
-- `demo:seed` adds sample accounts and 12 sample products.
+- `demo:seed` adds sample accounts and 77 sample products with photos.
 
 ---
 
