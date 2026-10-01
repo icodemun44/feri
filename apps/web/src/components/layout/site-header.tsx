@@ -1,26 +1,49 @@
 import Link from "next/link";
-import { Search } from "lucide-react";
-import { ROLES } from "@feri/shared";
-import { Button, Container } from "@feri/ui";
+import { LogOut, Search } from "lucide-react";
+import { getInitials, ROLES } from "@feri/shared";
+import { Button } from "@feri/ui";
 import { signOutAction } from "@/modules/auth/auth.actions";
+import type { AppUser } from "@/modules/users/user.types";
 import { getCurrentUser } from "@/server/auth/session";
+import { HeaderNav, type HeaderNavItem } from "./header-nav";
 import { Logo } from "./logo";
 
-const navLinkClasses = "text-sm font-semibold text-body hover:text-primary";
+const BROWSE_ITEM: HeaderNavItem = {
+  href: "/products",
+  label: "Browse",
+  icon: "browse",
+  activePrefixes: ["/", "/products"],
+};
+
+const buildNavItems = (user: AppUser | null): HeaderNavItem[] => {
+  const items = [BROWSE_ITEM];
+  if (user?.role === ROLES.SELLER) {
+    items.push({ href: "/seller", label: "My shop", icon: "shop", activePrefixes: ["/seller"] });
+  }
+  if (user?.role === ROLES.ADMIN) {
+    items.push({ href: "/admin", label: "Admin", icon: "admin", activePrefixes: ["/admin"] });
+  }
+  if (!user || user.role === ROLES.BUYER) {
+    items.push({ href: "/sell", label: "Sell", icon: "sell", activePrefixes: ["/sell"] });
+  }
+  return items;
+};
 
 export const SiteHeader = async () => {
   const user = await getCurrentUser();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-surface">
-      <Container className="flex flex-wrap items-center gap-x-6 gap-y-3 py-3">
+    <header className="sticky top-0 z-40 px-3 pt-3 sm:pt-4">
+      <div className="mx-auto flex w-full flex-wrap items-center gap-x-4 gap-y-3 rounded-3xl border border-line bg-surface px-4 py-2.5 shadow-overlay sm:w-[90%] sm:max-w-screen-2xl md:rounded-full md:px-5">
         <Logo />
+
+        <HeaderNav items={buildNavItems(user)} />
 
         <form
           action="/products"
           method="get"
           role="search"
-          className="order-last w-full sm:order-none sm:max-w-md sm:flex-1"
+          className="order-last w-full md:order-none md:w-auto md:flex-1"
         >
           <label htmlFor="site-search" className="sr-only">
             Search products
@@ -28,61 +51,50 @@ export const SiteHeader = async () => {
           <div className="relative">
             <Search
               aria-hidden="true"
-              className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted"
+              className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted"
             />
             <input
               id="site-search"
               name="q"
               type="search"
               placeholder="Search jackets, watches, bags..."
-              className="h-11 w-full rounded-lg border border-line-strong bg-canvas pl-10 pr-3 text-sm text-ink placeholder:text-muted hover:border-taupe focus-visible:border-primary"
+              className="h-11 w-full rounded-full border border-line bg-canvas pl-11 pr-4 text-sm text-ink placeholder:text-muted hover:border-line-strong focus-visible:border-primary"
             />
           </div>
         </form>
 
-        <nav aria-label="Main" className="ml-auto flex items-center gap-4 sm:gap-5">
-          <Link href="/products" className={navLinkClasses}>
-            Browse
-          </Link>
-          {user?.role === ROLES.SELLER ? (
-            <Link href="/seller" className={navLinkClasses}>
-              My shop
+        {user ? (
+          <div className="ml-auto flex items-center gap-2 md:ml-0">
+            <Link
+              href="/account"
+              aria-label="Your account"
+              title={user.fullName}
+              className="flex size-11 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
+            >
+              {getInitials(user.fullName)}
             </Link>
-          ) : null}
-          {user?.role === ROLES.ADMIN ? (
-            <Link href="/admin" className={navLinkClasses}>
-              Admin
-            </Link>
-          ) : null}
-          {user?.role === ROLES.BUYER || !user ? (
-            <Link href="/sell" className={navLinkClasses}>
-              Sell
-            </Link>
-          ) : null}
-
-          {user ? (
-            <div className="flex items-center gap-2">
-              <Button asChild variant="secondary" size="sm">
-                <Link href="/account">Account</Link>
-              </Button>
-              <form action={signOutAction}>
-                <Button type="submit" variant="ghost" size="sm">
-                  Log out
-                </Button>
-              </form>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <Button asChild variant="ghost" size="sm">
-                <Link href="/login">Log in</Link>
-              </Button>
-              <Button asChild size="sm">
-                <Link href="/signup">Sign up</Link>
-              </Button>
-            </div>
-          )}
-        </nav>
-      </Container>
+            <form action={signOutAction}>
+              <button
+                type="submit"
+                aria-label="Log out"
+                title="Log out"
+                className="flex size-11 items-center justify-center rounded-full text-body transition-colors hover:bg-surface-muted hover:text-ink"
+              >
+                <LogOut aria-hidden="true" className="size-5" />
+              </button>
+            </form>
+          </div>
+        ) : (
+          <div className="ml-auto flex items-center gap-2 md:ml-0">
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/login">Log in</Link>
+            </Button>
+            <Button asChild variant="accent" size="sm">
+              <Link href="/signup">Sign up</Link>
+            </Button>
+          </div>
+        )}
+      </div>
     </header>
   );
 };
