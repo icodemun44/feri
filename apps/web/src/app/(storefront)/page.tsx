@@ -1,25 +1,23 @@
-import { BadgeCheck, HandCoins, MapPin } from "lucide-react";
 import { Container } from "@feri/ui";
 import { bannerService } from "@/modules/banners/banner.service";
 import { HeroCarousel } from "@/modules/banners/components/hero-carousel";
 import { catalogService } from "@/modules/catalog/catalog.service";
 import { CategoryProductShowcase } from "@/modules/catalog/components/category-product-showcase";
 
-const TRUST_POINTS = [
+const BUYING_PROMISES = [
   {
-    icon: BadgeCheck,
-    title: "Sellers verified by phone",
-    description: "Every seller is reviewed and called by our team before they can list.",
+    lead: "Every seller gets a phone call.",
+    detail:
+      "Our team calls each seller to check who they are before their first listing goes live.",
   },
   {
-    icon: HandCoins,
-    title: "Pay on delivery",
-    description: "Check your find first, then pay. Cash on delivery on every order.",
+    lead: "Pay when it arrives.",
+    detail:
+      "Open the parcel, check the item, then pay the courier. Every order is cash on delivery.",
   },
   {
-    icon: MapPin,
-    title: "Made for Nepal",
-    description: "Local sellers, prices in rupees and delivery across the country.",
+    lead: "Prices in rupees.",
+    detail: "Listings come from sellers in Nepal, priced the way you would pay for them.",
   },
 ] as const;
 
@@ -46,21 +44,18 @@ const HomePage = async ({ searchParams }: HomePageProps) => {
         initialProducts={initialProducts}
       />
 
-      <section aria-label="Why shop with us">
-        <ul className="grid gap-4 sm:grid-cols-3">
-          {TRUST_POINTS.map(({ icon: Icon, title, description }) => (
-            <li
-              key={title}
-              className="flex flex-col gap-2 rounded-xl border border-line bg-surface p-5"
-            >
-              <span className="flex size-10 items-center justify-center rounded-full bg-accent-soft text-accent-strong">
-                <Icon aria-hidden="true" className="size-5" />
-              </span>
-              <h3 className="text-base">{title}</h3>
-              <p className="text-sm text-muted">{description}</p>
-            </li>
+      <section aria-labelledby="buying-promises-heading" className="mt-6">
+        <h2 id="buying-promises-heading" className="sr-only">
+          How buying works
+        </h2>
+        <dl className="grid gap-x-10 gap-y-8 sm:grid-cols-3">
+          {BUYING_PROMISES.map(({ lead, detail }) => (
+            <div key={lead} className="flex flex-col gap-2 border-t-2 border-primary pt-4">
+              <dt className="text-lg font-semibold text-ink">{lead}</dt>
+              <dd className="max-w-xs text-muted">{detail}</dd>
+            </div>
           ))}
-        </ul>
+        </dl>
       </section>
     </Container>
   );

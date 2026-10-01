@@ -18,6 +18,7 @@ type HeroSlide = {
 type ToneStyle = {
   surface: string;
   subtitle: string;
+  watermark: string;
   ctaVariant: "accent" | "primary";
 };
 
@@ -25,12 +26,33 @@ const AUTO_ADVANCE_INTERVAL_MS = 6000;
 const FIRST_SLIDE_INDEX = 0;
 const NEXT_SLIDE_STEP = 1;
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+const BRAND_WORD_IN_NEPALI = "फेरि";
 
 const TONE_STYLES: Record<BannerTone, ToneStyle> = {
-  UMBER: { surface: "bg-primary text-white", subtitle: "text-white/85", ctaVariant: "accent" },
-  CLAY: { surface: "bg-accent text-ink", subtitle: "text-ink/80", ctaVariant: "primary" },
-  INK: { surface: "bg-ink text-white", subtitle: "text-white/85", ctaVariant: "accent" },
-  TAUPE: { surface: "bg-taupe text-ink", subtitle: "text-ink/80", ctaVariant: "primary" },
+  UMBER: {
+    surface: "bg-primary text-white",
+    subtitle: "text-white/85",
+    watermark: "text-white/10",
+    ctaVariant: "accent",
+  },
+  CLAY: {
+    surface: "bg-accent text-ink",
+    subtitle: "text-ink/80",
+    watermark: "text-ink/10",
+    ctaVariant: "primary",
+  },
+  INK: {
+    surface: "bg-ink text-white",
+    subtitle: "text-white/85",
+    watermark: "text-white/10",
+    ctaVariant: "accent",
+  },
+  TAUPE: {
+    surface: "bg-taupe text-ink",
+    subtitle: "text-ink/80",
+    watermark: "text-ink/10",
+    ctaVariant: "primary",
+  },
 };
 
 const subscribeToReducedMotion = (onChange: () => void): (() => void) => {
@@ -100,32 +122,41 @@ export const HeroCarousel = ({ slides }: { slides: readonly HeroSlide[] }) => {
               aria-hidden={!isActive}
               inert={!isActive}
               className={cn(
-                "flex min-h-64 w-full shrink-0 flex-col justify-center gap-4 px-6 py-10 sm:min-h-72 sm:px-12",
+                "relative flex min-h-72 w-full shrink-0 items-center overflow-hidden px-6 pb-20 pt-10 sm:min-h-80 sm:px-12",
                 toneStyle.surface,
               )}
             >
-              <h2 className="max-w-xl text-3xl leading-tight text-inherit sm:text-4xl">
-                {slide.title}
-              </h2>
-              {slide.subtitle ? (
-                <p className={cn("max-w-lg text-base sm:text-lg", toneStyle.subtitle)}>
-                  {slide.subtitle}
-                </p>
-              ) : null}
-              {slide.ctaLabel && slide.ctaHref ? (
-                <div className="pt-2">
-                  <Button asChild variant={toneStyle.ctaVariant} size="lg">
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "pointer-events-none absolute -bottom-8 right-6 hidden select-none font-display text-[15rem] font-semibold leading-none md:block",
+                  toneStyle.watermark,
+                )}
+              >
+                {BRAND_WORD_IN_NEPALI}
+              </span>
+              <div className="relative flex max-w-xl flex-col items-start gap-4">
+                <h2 className="text-balance text-3xl leading-tight text-inherit sm:text-4xl">
+                  {slide.title}
+                </h2>
+                {slide.subtitle ? (
+                  <p className={cn("text-pretty text-base sm:text-lg", toneStyle.subtitle)}>
+                    {slide.subtitle}
+                  </p>
+                ) : null}
+                {slide.ctaLabel && slide.ctaHref ? (
+                  <Button asChild variant={toneStyle.ctaVariant} size="lg" className="mt-2">
                     <Link href={slide.ctaHref}>{slide.ctaLabel}</Link>
                   </Button>
-                </div>
-              ) : null}
+                ) : null}
+              </div>
             </article>
           );
         })}
       </div>
 
       {hasMultipleSlides ? (
-        <div className="absolute inset-x-0 bottom-4 flex items-center justify-between px-4 sm:px-8">
+        <div className="absolute inset-x-0 bottom-6 flex items-center justify-between px-6 sm:px-12">
           <div className="flex items-center gap-2">
             {slides.map((slide, index) => (
               <button
