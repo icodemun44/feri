@@ -26,6 +26,8 @@ Cart, checkout and orders are the next phases (see `docs/IMPLEMENTATION_PLAN.md`
 
 ## Quick start
 
+First time on a new computer? Follow the step-by-step guide in [docs/SETUP.md](docs/SETUP.md). The short version is below.
+
 ```bash
 pnpm install
 cp .env.example .env
@@ -93,6 +95,7 @@ docs                Product and engineering documentation
 - [Role-based access control](docs/rbac.md)
 - [Design system](docs/design-system.md)
 - [Team contribution plan](docs/CONTRIBUTION_PLAN.md)
+- [Setting up on a new computer, step by step](docs/SETUP.md)
 - [Getting started for teammates (no terminal needed)](docs/GETTING_STARTED.md)
 
 Every folder in `apps/web/src/modules` has its own `README.md` explaining its purpose and flow.

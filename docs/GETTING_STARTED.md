@@ -89,7 +89,7 @@ Examples: `docs: add user guide draft`, `test: record results for round 1`, `sty
 
 ## 7. Seeing the running website
 
-The lead will share a link or a time to look at the running site. If you want to run it on your own computer, follow the steps in the main `README.md` (it needs a few programs installed, so ask the lead first).
+The lead will share a link or a time to look at the running site. If you want to run it on your own computer, follow `docs/SETUP.md` (it needs a few programs installed, so ask the lead first).
 
 Demo accounts for testing (password `Password123!`):
 
