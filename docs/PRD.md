@@ -73,7 +73,7 @@ The same matrix lives in code in `packages/shared/src/permissions.ts` and is enf
 3. Open a product: images, condition, price, seller and details.
 4. Add to cart and check out with a shipping address, paying cash on delivery. _(planned)_
 5. Follow the order through placed, confirmed, shipped and delivered. _(planned)_
-6. Leave a rating and review after delivery. _(planned)_
+6. Leave a rating and review after delivery (built).
 7. Apply to become a seller at any time from the account page.
 
 ### 3.2 Seller application (built)
@@ -120,7 +120,7 @@ Every step writes an audit log entry. A person can never have two open applicati
 | Catalog           | "Checked" and "Not yet checked" tags on cards and a clear banner on the product page                | Built   |
 | Cart and checkout | Cart, delivery address, cash on delivery orders (one order per seller), buyer order list and cancel | Built   |
 | Orders            | Seller fulfilment (confirm, ship, deliver, cancel with a reason) and cash collection on delivery    | Built   |
-| Reviews           | Ratings and reviews after delivery                                                                  | Planned |
+| Reviews           | Ratings and reviews after delivery                                                                  | Built   |
 | Admin             | Banner management, category management, listing moderation, user management, analytics              | Planned |
 | Payments          | eSewa and Khalti integration                                                                        | Later   |
 | Notifications     | Email for application decisions and order confirmations                                             | Later   |

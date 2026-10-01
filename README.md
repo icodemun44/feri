@@ -16,9 +16,10 @@ Built with Next.js 16, React 19, TypeScript, Tailwind CSS 4, Prisma 7 and Supaba
 - Admin Listings section: check new listings after they go live, or remove them with a reason
 - Cart and checkout with cash on delivery (one order per seller), plus a buyer orders page with cancel
 - Seller order handling: confirm, ship, mark delivered with cash collected, or cancel with a reason
+- Reviews: buyers rate delivered items, shop pages and product pages show seller ratings, admins can remove reviews
 - "Checked" tags on listings, with a clear banner on the product page
 
-Reviews and admin tools (banners, categories, user suspension) are the next phases (see `docs/IMPLEMENTATION_PLAN.md`).
+Admin tools (banners, categories, user suspension) are the next phase (see `docs/IMPLEMENTATION_PLAN.md`).
 
 ## Prerequisites
 
