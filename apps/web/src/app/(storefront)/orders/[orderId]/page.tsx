@@ -35,7 +35,7 @@ type OrderPageProps = {
 };
 
 const loadOrder = async (orderId: string): Promise<{ user: AppUser; order: OrderDetail }> => {
-  const user = await requireRole([ROLES.BUYER, ROLES.SELLER], { nextPath: `/orders/${orderId}` });
+  const user = await requireRole([ROLES.BUYER], { nextPath: `/orders/${orderId}` });
   if (!uuidField.safeParse(orderId).success) {
     notFound();
   }

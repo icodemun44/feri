@@ -21,7 +21,7 @@ const readPlacedCount = (value: string | string[] | undefined): number => {
 };
 
 const OrdersPage = async ({ searchParams }: OrdersPageProps) => {
-  const user = await requireRole([ROLES.BUYER, ROLES.SELLER], { nextPath: "/orders" });
+  const user = await requireRole([ROLES.BUYER], { nextPath: "/orders" });
   const placedCount = readPlacedCount((await searchParams)["placed"]);
   const orders = await orderService.listMine(user);
 

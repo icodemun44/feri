@@ -11,7 +11,7 @@ export const PROTECTED_ROUTE_RULES: readonly RouteAccessRule[] = [
   { pathPrefix: "/account", allowedRoles: [ROLES.BUYER, ROLES.SELLER, ROLES.ADMIN] },
   { pathPrefix: "/cart", allowedRoles: [ROLES.BUYER] },
   { pathPrefix: "/checkout", allowedRoles: [ROLES.BUYER] },
-  { pathPrefix: "/orders", allowedRoles: [ROLES.BUYER, ROLES.SELLER] },
+  { pathPrefix: "/orders", allowedRoles: [ROLES.BUYER] },
   { pathPrefix: "/sell/apply", allowedRoles: [ROLES.BUYER] },
   { pathPrefix: "/sell/status", allowedRoles: [ROLES.BUYER, ROLES.SELLER] },
 ];

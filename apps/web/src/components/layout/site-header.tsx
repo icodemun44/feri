@@ -24,10 +24,10 @@ const buildNavItems = (user: AppUser | null): HeaderNavItem[] => {
   if (user?.role === ROLES.ADMIN) {
     items.push({ href: "/admin", label: "Admin", icon: "admin", activePrefixes: ["/admin"] });
   }
-  if (user && user.role !== ROLES.ADMIN) {
+  if (user?.role === ROLES.BUYER) {
     items.push({
       href: "/orders",
-      label: user.role === ROLES.SELLER ? "Purchases" : "Orders",
+      label: "Orders",
       icon: "orders",
       activePrefixes: ["/orders"],
     });
