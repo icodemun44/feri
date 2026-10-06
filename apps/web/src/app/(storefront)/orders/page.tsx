@@ -43,7 +43,7 @@ const OrdersPage = async ({ searchParams }: OrdersPageProps) => {
           title="No orders yet"
           description="When you place an order it will show up here, with its status."
           action={
-            <Button asChild variant="accent">
+            <Button asChild>
               <Link href="/products">Browse products</Link>
             </Button>
           }

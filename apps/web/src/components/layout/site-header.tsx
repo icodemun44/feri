@@ -117,7 +117,7 @@ export const SiteHeader = async () => {
             <Button asChild variant="ghost" size="sm">
               <Link href="/login">Log in</Link>
             </Button>
-            <Button asChild variant="accent" size="sm">
+            <Button asChild size="sm">
               <Link href="/signup">Sign up</Link>
             </Button>
           </div>

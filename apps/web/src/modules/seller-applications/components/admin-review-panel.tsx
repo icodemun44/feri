@@ -108,9 +108,7 @@ const ApproveForm = ({
           maxLength={500}
         />
       </FormField>
-      <SubmitButton variant="accent" disabled={!canApprove}>
-        Approve as seller
-      </SubmitButton>
+      <SubmitButton disabled={!canApprove}>Approve as seller</SubmitButton>
       {canApprove ? null : (
         <p className="text-xs text-muted">Save the call notes before approving.</p>
       )}

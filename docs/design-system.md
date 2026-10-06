@@ -10,23 +10,23 @@ Tokens live in `packages/ui/src/styles/theme.css`; components in `packages/ui/sr
 
 ## Colour
 
-| Token                               | Value                                   | Use                                                          |
-| ----------------------------------- | --------------------------------------- | ------------------------------------------------------------ |
-| `primary`                           | `#473536`                               | Brand, primary buttons, navigation highlight (umber)         |
-| `primary-hover`                     | `#362728`                               | Hover state                                                  |
-| `primary-soft`                      | `#F1ECED`                               | Soft brand backgrounds                                       |
-| `ink`                               | `#0A0708`                               | Headings, text on clay                                       |
-| `taupe`                             | `#ABA79F`                               | Placeholders, soft neutral surfaces, decorative icons        |
-| `accent`                            | `#D98F75`                               | Main call to action (buy, apply, approve); text on it is ink |
-| `accent-hover`                      | `#C77A5F`                               | Hover state                                                  |
-| `accent-soft`                       | `#FBF1EC`                               | Soft accent backgrounds                                      |
-| `accent-strong`                     | `#9A5440`                               | Accent used as text on light backgrounds                     |
-| `canvas`                            | `#FAF9F7`                               | Page background                                              |
-| `surface`                           | `#FFFFFF`                               | Cards and inputs                                             |
-| `surface-muted`                     | `#F3F1EE`                               | Subtle panels, table headers                                 |
-| `line` / `line-strong`              | `#E4E1DC` / `#CFCBC4`                   | Borders                                                      |
-| `body` / `muted`                    | `#2B2325` / `#6E6862`                   | Body text and secondary text                                 |
-| `success` `warning` `danger` `info` | `#2A7352` `#8A5C0E` `#B3382F` `#2F6690` | Status only, each with a `-soft` background                  |
+| Token                               | Value                                   | Use                                                              |
+| ----------------------------------- | --------------------------------------- | ---------------------------------------------------------------- |
+| `primary`                           | `#473536`                               | Brand, primary buttons, navigation highlight (umber)             |
+| `primary-hover`                     | `#362728`                               | Hover state                                                      |
+| `primary-soft`                      | `#F1ECED`                               | Soft brand backgrounds                                           |
+| `ink`                               | `#0A0708`                               | Headings, text on clay                                           |
+| `taupe`                             | `#ABA79F`                               | Placeholders, soft neutral surfaces, decorative icons            |
+| `accent`                            | `#D98F75`                               | Highlights only (cart count badge, rating stars); never a button |
+| `accent-hover`                      | `#C77A5F`                               | Hover state                                                      |
+| `accent-soft`                       | `#FBF1EC`                               | Soft accent backgrounds                                          |
+| `accent-strong`                     | `#9A5440`                               | Accent used as text on light backgrounds                         |
+| `canvas`                            | `#FAF9F7`                               | Page background                                                  |
+| `surface`                           | `#FFFFFF`                               | Cards and inputs                                                 |
+| `surface-muted`                     | `#F3F1EE`                               | Subtle panels, table headers                                     |
+| `line` / `line-strong`              | `#E4E1DC` / `#CFCBC4`                   | Borders                                                          |
+| `body` / `muted`                    | `#2B2325` / `#6E6862`                   | Body text and secondary text                                     |
+| `success` `warning` `danger` `info` | `#2A7352` `#8A5C0E` `#B3382F` `#2F6690` | Status only, each with a `-soft` background                      |
 
 The accent is a soft clay on purpose. It replaced a heavier brick red because a lighter warm tone feels friendlier and keeps attention on buying instead of feeling like a warning.
 
@@ -44,11 +44,11 @@ Fonts are installed from Fontsource, so they are self-hosted and there are no ru
 
 ## Components (`@feri/ui`)
 
-`Button` (variants: primary, accent, secondary, ghost, danger; sizes sm, md, lg; `asChild`, `isLoading`), `Input`, `Textarea`, `Select`, `FormField` (label, hint and error wiring with ARIA), `Badge` (tones), `Card` family, `Alert`, `EmptyState`, `Container`, `Skeleton`, `Spinner`.
+`Button` (variants: primary, secondary, ghost, danger; sizes sm, md, lg; `asChild`, `isLoading`), `Input`, `Textarea`, `Select`, `FormField` (label, hint and error wiring with ARIA), `Badge` (tones), `Card` family, `Alert`, `EmptyState`, `Container`, `Skeleton`, `Spinner`.
 
 Guidelines:
 
-- Use `Button variant="accent"` for the single main action on a screen; everything else is primary, secondary or ghost.
+- Every main call to action is the default `Button` (umber, white text). Use secondary or ghost for lesser actions. Clay is a highlight colour, never a button.
 - Every list needs an `EmptyState`.
 - Use `FormField` for every form control so labels, hints and errors are connected for screen readers.
 - Status colours are for status only (badges and alerts), never decoration.

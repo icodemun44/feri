@@ -36,7 +36,7 @@ const SellerOverviewPage = async () => {
         title={seller ? seller.businessName : "Your shop"}
         description="Here is what needs your attention today."
         action={
-          <Button asChild variant="accent">
+          <Button asChild>
             <Link href="/seller/listings/new">
               <PackagePlus aria-hidden="true" className="size-4" />
               New listing

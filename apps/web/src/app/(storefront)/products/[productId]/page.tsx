@@ -49,7 +49,7 @@ const PurchaseArea = ({
   }
   if (!userRole) {
     return (
-      <Button asChild size="lg" variant="accent">
+      <Button asChild size="lg">
         <Link href={`/login?next=${encodeURIComponent(`/products/${productId}`)}`}>
           Log in to buy
         </Link>

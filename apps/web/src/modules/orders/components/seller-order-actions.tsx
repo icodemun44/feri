@@ -42,7 +42,7 @@ const StepForm = ({ orderId, action, label, hint }: StepFormProps) => {
       <ActionMessage result={result} />
       <input type="hidden" name="orderId" value={orderId} />
       <p className="text-sm text-muted">{hint}</p>
-      <SubmitButton variant="accent">{label}</SubmitButton>
+      <SubmitButton>{label}</SubmitButton>
     </form>
   );
 };

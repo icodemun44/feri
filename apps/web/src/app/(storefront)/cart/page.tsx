@@ -58,7 +58,7 @@ const CartPage = async () => {
           title="Your cart is empty"
           description="Find something you like and add it here. Every item is one of a kind."
           action={
-            <Button asChild variant="accent">
+            <Button asChild>
               <Link href="/products">Browse products</Link>
             </Button>
           }
@@ -128,11 +128,11 @@ const CartPage = async () => {
                 </p>
               </div>
               {cart.unavailableLines.length > 0 ? (
-                <Button size="lg" variant="accent" disabled>
+                <Button size="lg" disabled>
                   Continue to checkout
                 </Button>
               ) : (
-                <Button asChild size="lg" variant="accent">
+                <Button asChild size="lg">
                   <Link href="/checkout">Continue to checkout</Link>
                 </Button>
               )}

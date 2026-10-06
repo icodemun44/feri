@@ -24,9 +24,7 @@ const PublishForm = ({ productId, hasPhotos }: { productId: string; hasPhotos: b
     <form action={publish} className="flex flex-col gap-2">
       <ActionMessage result={result} />
       <input type="hidden" name="productId" value={productId} />
-      <SubmitButton variant="accent" disabled={!hasPhotos}>
-        Publish listing
-      </SubmitButton>
+      <SubmitButton disabled={!hasPhotos}>Publish listing</SubmitButton>
       {hasPhotos ? null : <p className="text-xs text-muted">Add at least one photo to publish.</p>}
     </form>
   );

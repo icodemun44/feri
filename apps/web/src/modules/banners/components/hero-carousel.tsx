@@ -19,7 +19,7 @@ type ToneStyle = {
   surface: string;
   subtitle: string;
   watermark: string;
-  ctaVariant: "accent" | "primary";
+  ctaVariant: "primary" | "secondary";
 };
 
 const AUTO_ADVANCE_INTERVAL_MS = 6000;
@@ -33,7 +33,7 @@ const TONE_STYLES: Record<BannerTone, ToneStyle> = {
     surface: "bg-primary text-white",
     subtitle: "text-white/85",
     watermark: "text-white/10",
-    ctaVariant: "accent",
+    ctaVariant: "secondary",
   },
   CLAY: {
     surface: "bg-accent text-ink",
@@ -45,7 +45,7 @@ const TONE_STYLES: Record<BannerTone, ToneStyle> = {
     surface: "bg-ink text-white",
     subtitle: "text-white/85",
     watermark: "text-white/10",
-    ctaVariant: "accent",
+    ctaVariant: "secondary",
   },
   TAUPE: {
     surface: "bg-taupe text-ink",

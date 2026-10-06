@@ -30,7 +30,7 @@ const AdminOverviewPage = async () => {
         title="Overview"
         description="Seller applications are the first thing to check each day."
         action={
-          <Button asChild variant="accent">
+          <Button asChild>
             <Link href="/admin/seller-applications?status=PENDING">
               Review waiting applications
             </Link>

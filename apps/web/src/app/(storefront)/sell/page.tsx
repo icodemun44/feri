@@ -85,7 +85,7 @@ const SellPage = async () => {
       </ol>
 
       <div className="mt-8">
-        <Button asChild size="lg" variant="accent">
+        <Button asChild size="lg">
           <Link href={href}>{label}</Link>
         </Button>
       </div>

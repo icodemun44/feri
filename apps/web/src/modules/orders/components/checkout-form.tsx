@@ -101,7 +101,7 @@ export const CheckoutForm = ({ defaultFullName, defaultPhone }: CheckoutFormProp
         </div>
       </section>
 
-      <SubmitButton size="lg" variant="accent" fullWidth>
+      <SubmitButton size="lg" fullWidth>
         Place order
       </SubmitButton>
     </form>

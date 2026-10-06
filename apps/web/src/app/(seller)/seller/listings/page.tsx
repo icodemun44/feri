@@ -14,7 +14,7 @@ export const metadata: Metadata = { title: "Your listings" };
 const NEW_LISTING_PATH = "/seller/listings/new";
 
 const NewListingButton = () => (
-  <Button asChild variant="accent">
+  <Button asChild>
     <Link href={NEW_LISTING_PATH}>
       <Plus aria-hidden="true" className="size-4" />
       New listing

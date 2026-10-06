@@ -19,7 +19,7 @@ const InCartNotice = () => (
       <Check aria-hidden="true" className="size-4" />
       In your cart
     </p>
-    <Button asChild size="lg" variant="accent">
+    <Button asChild size="lg">
       <Link href="/cart">View cart</Link>
     </Button>
   </div>
@@ -36,7 +36,7 @@ export const AddToCartButton = ({ productId, isInCart }: AddToCartButtonProps) =
     <form action={addToCart} className="flex flex-col gap-3">
       <ActionMessage result={result} />
       <input type="hidden" name="productId" value={productId} />
-      <SubmitButton size="lg" variant="accent" fullWidth>
+      <SubmitButton size="lg" fullWidth>
         Add to cart
       </SubmitButton>
       <p className="text-xs text-muted">Pay when your order arrives. Cash on delivery.</p>

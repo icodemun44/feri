@@ -51,7 +51,7 @@ const AccountPage = async () => {
                   before you can list.
                 </p>
               </div>
-              <Button asChild variant="accent">
+              <Button asChild>
                 <Link href="/sell">Become a seller</Link>
               </Button>
             </CardContent>

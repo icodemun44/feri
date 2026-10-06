@@ -33,7 +33,7 @@ const SellerApplicationStatusPage = async () => {
           title="You have not applied yet"
           description="Apply to become a seller and start listing your items."
           action={
-            <Button asChild variant="accent">
+            <Button asChild>
               <Link href="/sell/apply">Apply to sell</Link>
             </Button>
           }
@@ -76,7 +76,7 @@ const SellerApplicationStatusPage = async () => {
 
           {status === SELLER_APPLICATION_STATUSES.REJECTED && user.role === ROLES.BUYER ? (
             <div>
-              <Button asChild variant="accent">
+              <Button asChild>
                 <Link href="/sell/apply">Apply again</Link>
               </Button>
             </div>

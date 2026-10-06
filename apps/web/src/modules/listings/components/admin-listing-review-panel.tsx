@@ -33,7 +33,7 @@ const ApproveForm = ({ productId }: { productId: string }) => {
     <form action={approve} className="flex flex-col gap-3">
       <ActionMessage result={result} />
       <input type="hidden" name="productId" value={productId} />
-      <SubmitButton variant="accent">Mark as checked</SubmitButton>
+      <SubmitButton>Mark as checked</SubmitButton>
     </form>
   );
 };
