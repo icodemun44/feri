@@ -13,6 +13,8 @@ Prisma is the **single source of truth** for the schema. Supabase is used for Au
 
 ## Tables
 
+See [erd.md](erd.md) for the diagram.
+
 `users`, `user_profiles`, `categories`, `seller_applications`, `sellers`, `products`, `product_images`, `cart_items`, `orders`, `order_items`, `payments`, `reviews`, `banners`, `audit_logs`.
 
 Key relationships:
