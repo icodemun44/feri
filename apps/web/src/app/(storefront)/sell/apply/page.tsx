@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { ROLES, isSellerApplicationOpen } from "@feri/shared";
-import { Container } from "@feri/ui";
+import { Alert, Container } from "@feri/ui";
 import { PageHeading } from "@/components/layout/page-heading";
 import { catalogService } from "@/modules/catalog/catalog.service";
+import {
+  SELLER_ACCOUNT_CANNOT_BUY_NOTICE,
+  SELLER_ACCOUNT_CANNOT_BUY_TITLE,
+} from "@/modules/seller-applications/seller-application.constants";
 import { SellerApplicationForm } from "@/modules/seller-applications/components/seller-application-form";
 import { sellerApplicationService } from "@/modules/seller-applications/seller-application.service";
 import { requireRole } from "@/server/auth/guards";
@@ -29,6 +33,9 @@ const ApplyToSellPage = async () => {
         title="Apply to sell"
         description="Tell us about your shop. A member of our team will call the number you give to verify your application."
       />
+      <Alert tone="warning" title={SELLER_ACCOUNT_CANNOT_BUY_TITLE} className="mb-6">
+        {SELLER_ACCOUNT_CANNOT_BUY_NOTICE}
+      </Alert>
       <div className="rounded-2xl border border-line bg-surface p-6 sm:p-8">
         <SellerApplicationForm
           categories={categories}

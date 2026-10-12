@@ -26,3 +26,8 @@ export const SELLER_APPLICATION_FILTERS: readonly {
   { label: "Approved", status: SELLER_APPLICATION_STATUSES.APPROVED },
   { label: "Rejected", status: SELLER_APPLICATION_STATUSES.REJECTED },
 ];
+
+export const SELLER_ACCOUNT_CANNOT_BUY_TITLE = "Seller accounts cannot buy";
+
+export const SELLER_ACCOUNT_CANNOT_BUY_NOTICE =
+  "Once you are approved, this account becomes a seller account and can no longer place orders. If you also want to shop, keep a separate buyer account with a different email.";

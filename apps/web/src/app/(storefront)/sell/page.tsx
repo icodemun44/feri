@@ -4,6 +4,10 @@ import { ClipboardList, PhoneCall, Store } from "lucide-react";
 import { ROLES, SELLER_APPLICATION_STATUSES } from "@feri/shared";
 import { Alert, Button, Container } from "@feri/ui";
 import { PageHeading } from "@/components/layout/page-heading";
+import {
+  SELLER_ACCOUNT_CANNOT_BUY_NOTICE,
+  SELLER_ACCOUNT_CANNOT_BUY_TITLE,
+} from "@/modules/seller-applications/seller-application.constants";
 import { sellerApplicationService } from "@/modules/seller-applications/seller-application.service";
 import { getCurrentUser } from "@/server/auth/session";
 
@@ -83,6 +87,10 @@ const SellPage = async () => {
           </li>
         ))}
       </ol>
+
+      <Alert tone="info" title={SELLER_ACCOUNT_CANNOT_BUY_TITLE} className="mt-6">
+        {SELLER_ACCOUNT_CANNOT_BUY_NOTICE}
+      </Alert>
 
       <div className="mt-8">
         <Button asChild size="lg">

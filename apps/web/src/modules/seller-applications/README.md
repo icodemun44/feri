@@ -25,3 +25,4 @@
 - Concurrency: status changes use `updateMany ... where status in (...)`. If two admins act at once, only one update matches and the other gets a clear "just updated by someone else" error.
 - A database partial unique index (`seller_applications_one_open_per_applicant`) guarantees a person never has two open applications, even if two submissions race.
 - A rejected applicant can apply again; the previous application stays as history.
+- An account has one role. An approved seller cannot place orders, so `/sell` and `/sell/apply` warn applicants to keep a separate buyer account for shopping.
