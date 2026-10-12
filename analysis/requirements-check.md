@@ -1,8 +1,7 @@
 # Requirements Check - Feri Nepal
 
 **Checked by:** Member B
-**Date checked:** 2026-10-12
-**Source documents:** `docs/PRD.md` (section 4, Functional requirements and status), `docs/IMPLEMENTATION_PLAN.md` (build phases) and the README ("What works today").
+
 
 **Method:** Each requirement in PRD section 4 was compared with the build phase status in the implementation plan and with the README. This is a document check, not a hands-on test of every screen.
 
@@ -48,4 +47,4 @@
 
 ## Not counted
 
-The non-functional requirements in PRD section 6 (security, accessibility, performance and so on) were not counted in the totals. Accessibility and form quality are covered in `forms-review.md`.
+The non-functional requirements in PRD section 6 (security, accessibility, performance and so on) were not counted in the totals. Accessibility and form quality are covered in `form_check.md`.
