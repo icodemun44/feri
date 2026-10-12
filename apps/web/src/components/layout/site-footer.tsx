@@ -67,11 +67,6 @@ export const SiteFooter = async () => {
                 How selling works
               </Link>
             </li>
-            <li>
-              <Link href="/sell/apply" className={linkClasses}>
-                Apply to sell
-              </Link>
-            </li>
           </FooterLinkGroup>
 
           <FooterLinkGroup heading="Your account">
