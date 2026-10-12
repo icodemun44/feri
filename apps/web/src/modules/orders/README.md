@@ -28,3 +28,4 @@
 - The allowed order steps are defined once in `@feri/shared` (`canTransitionOrder`). Every change is a guarded update on the current status, so two quick clicks cannot move an order twice.
 - A buyer can cancel only while the order is still "Placed". Once the seller confirms it, only the seller can cancel.
 - Items of a delivered order stay sold. Items of a cancelled order go back on sale.
+- When an admin removes a listing that is in an open order, the order stays valid but the buyer sees a "Listing removed" notice on the list and the order page. The buyer then agrees the outcome with the seller or cancels the order. Closed orders (delivered or cancelled) show no notice.

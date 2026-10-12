@@ -9,6 +9,7 @@ export type OrderSummary = {
   sellerName: string;
   buyerName: string;
   itemCount: number;
+  hasRemovedListing: boolean;
   coverImageUrl: string | null;
 };
 
@@ -18,6 +19,8 @@ export type OrderItemView = {
   title: string;
   unitPriceMinor: number;
   imageUrl: string | null;
+  isListingRemoved: boolean;
+  listingRemovalReason: string | null;
 };
 
 export type OrderDetail = {

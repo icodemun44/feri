@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ReceiptText } from "lucide-react";
 import { formatOrderNumber, formatPaisa, ROLES } from "@feri/shared";
-import { Alert, Button, Container, EmptyState } from "@feri/ui";
+import { Alert, Badge, Button, Container, EmptyState } from "@feri/ui";
 import { PageHeading } from "@/components/layout/page-heading";
 import { formatDate } from "@/lib/format";
 import { OrderStatusBadge } from "@/modules/orders/components/order-status-badge";
+import { isOrderClosed } from "@/modules/orders/order.constants";
 import { orderService } from "@/modules/orders/order.service";
 import { requireRole } from "@/server/auth/guards";
 
@@ -74,6 +75,9 @@ const OrdersPage = async ({ searchParams }: OrdersPageProps) => {
                 <span className="flex flex-col items-end gap-1">
                   <span className="font-semibold text-ink">{formatPaisa(order.totalMinor)}</span>
                   <OrderStatusBadge status={order.status} />
+                  {order.hasRemovedListing && !isOrderClosed(order.status) ? (
+                    <Badge tone="danger">Listing removed</Badge>
+                  ) : null}
                 </span>
               </Link>
             </li>

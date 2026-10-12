@@ -17,6 +17,8 @@ import type {
   SellerOrderView,
 } from "./order.types";
 
+const REMOVED_LISTING_STATUS = ProductStatus.REMOVED;
+
 const summarySelection = {
   id: true,
   orderNumber: true,
@@ -29,6 +31,7 @@ const summarySelection = {
     select: {
       product: {
         select: {
+          status: true,
           images: { orderBy: { position: "asc" }, take: 1, select: { storagePath: true } },
         },
       },
@@ -64,6 +67,8 @@ const detailSelection = {
       unitPriceMinor: true,
       product: {
         select: {
+          status: true,
+          removalReason: true,
           images: { orderBy: { position: "asc" }, take: 1, select: { storagePath: true } },
         },
       },
@@ -88,6 +93,7 @@ const toSummary = (row: SummaryRow): OrderSummary => ({
   sellerName: row.seller.businessName,
   buyerName: row.shippingFullName,
   itemCount: row.items.length,
+  hasRemovedListing: row.items.some((item) => item.product.status === REMOVED_LISTING_STATUS),
   coverImageUrl: firstImageUrl(row.items[0]?.product.images ?? []),
 });
 
@@ -107,6 +113,8 @@ const toDetail = (row: DetailRow): OrderDetail => ({
     title: item.titleSnapshot,
     unitPriceMinor: item.unitPriceMinor,
     imageUrl: firstImageUrl(item.product.images),
+    isListingRemoved: item.product.status === REMOVED_LISTING_STATUS,
+    listingRemovalReason: item.product.removalReason,
   })),
   subtotalMinor: row.subtotalMinor,
   deliveryFeeMinor: row.deliveryFeeMinor,

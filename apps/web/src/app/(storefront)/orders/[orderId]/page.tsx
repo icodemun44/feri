@@ -11,14 +11,17 @@ import {
   ROLES,
 } from "@feri/shared";
 import { uuidField } from "@feri/validation";
-import { Alert, Card, CardContent, CardHeader, CardTitle, Container, cn } from "@feri/ui";
+import { Alert, Badge, Card, CardContent, CardHeader, CardTitle, Container, cn } from "@feri/ui";
 import { formatDateTime } from "@/lib/format";
 import { CancelOrderButton } from "@/modules/orders/components/cancel-order-button";
 import { OrderStatusBadge } from "@/modules/orders/components/order-status-badge";
 import {
+  isOrderClosed,
   ORDER_PROGRESS_STEPS,
   PAYMENT_METHOD_LABELS,
   PAYMENT_STATUS_LABELS,
+  REMOVED_LISTING_NOTICE,
+  REMOVED_LISTING_NOTICE_TITLE,
 } from "@/modules/orders/order.constants";
 import { orderService } from "@/modules/orders/order.service";
 import type { OrderDetail } from "@/modules/orders/order.types";
@@ -87,6 +90,12 @@ const OrderPage = async ({ params }: OrderPageProps) => {
           </Alert>
         ) : null}
 
+        {order.items.some((item) => item.isListingRemoved) && !isOrderClosed(order.status) ? (
+          <Alert tone="danger" title={REMOVED_LISTING_NOTICE_TITLE}>
+            {REMOVED_LISTING_NOTICE}
+          </Alert>
+        ) : null}
+
         {isCancelled ? null : (
           <ol className="grid grid-cols-4 gap-2" aria-label="Order progress">
             {ORDER_PROGRESS_STEPS.map((step, index) => {
@@ -126,6 +135,7 @@ const OrderPage = async ({ params }: OrderPageProps) => {
                     ) : null}
                   </span>
                   <span className="min-w-0 flex-1 truncate text-ink">{item.title}</span>
+                  {item.isListingRemoved ? <Badge tone="danger">Removed</Badge> : null}
                   <span className="font-semibold text-ink">{formatPaisa(item.unitPriceMinor)}</span>
                 </li>
               ))}
