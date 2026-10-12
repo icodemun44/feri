@@ -1,11 +1,11 @@
 # Contributions
 
-Each person fills in their own section near the end of the project. Copy the template, put your name in the title and replace the text.
+Everyone keeps their own section up to date as they work. Copy the template, put your name in the title and add what you did, with links where you can.
 
 ## Template
 
 ```markdown
-## <Name> - <QA / Test data / Brand>
+## <Name> - <your area, for example testing, sample data, logo>
 
 - Tasks completed: (links to issues or pull requests)
 - Commits and pull requests: (links)
@@ -27,11 +27,26 @@ Each person fills in their own section near the end of the project. Copy the tem
   - Buying: cart, cash on delivery checkout (one order per seller), buyer orders, and seller order handling from confirm to delivered or cancelled.
   - Reviews: buyer ratings after delivery, seller ratings, and admin removal of reviews with an audit log.
   - Sample data: 77 sample products with photos, and demo accounts.
-  - Documents: the requirements document, implementation plan, setup guide, database notes, design system, and this contribution plan.
+  - Documents: the requirements document, implementation plan, setup guide, database notes, design system, and these contribution notes.
 - What I learned:
 
-## QA and testing
+## Teammate 1 - add your name
 
-## Test data and resources
+- Tasks completed:
+- Commits and pull requests:
+- Issues filed or files delivered:
+- What I learned:
 
-## Brand and logo
+## Teammate 2 - add your name
+
+- Tasks completed:
+- Commits and pull requests:
+- Issues filed or files delivered:
+- What I learned:
+
+## Teammate 3 - add your name
+
+- Tasks completed:
+- Commits and pull requests:
+- Issues filed or files delivered:
+- What I learned:

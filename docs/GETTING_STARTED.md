@@ -17,11 +17,11 @@ Repository: https://github.com/icodemun44/feri
 
 On the repository page you will use these tabs:
 
-| Tab               | What it is for                                                            |
-| ----------------- | ------------------------------------------------------------------------- |
-| **Code**          | All the files. Your work goes in the `docs` folder (see your role below). |
-| **Issues**        | Bug reports and tasks. The QA person lives here.                          |
-| **Pull requests** | Proposed changes waiting for the lead to approve.                         |
+| Tab               | What it is for                                      |
+| ----------------- | --------------------------------------------------- |
+| **Code**          | All the files. Your work goes in the `docs` folder. |
+| **Issues**        | Bug reports and tasks. The QA person lives here.    |
+| **Pull requests** | Proposed changes waiting for the lead to approve.   |
 
 Ask the lead for your role and tasks. Your work goes in the folder the lead gives you.
 
