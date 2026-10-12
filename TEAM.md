@@ -1,6 +1,6 @@
 # Team
 
-Add yourself by editing this file on GitHub (see `docs/GETTING_STARTED.md`, section 3).
+Add yourself by editing this file on GitHub.
 
 | Name | Role           | GitHub username | One line about you |
 | ---- | -------------- | --------------- | ------------------ |

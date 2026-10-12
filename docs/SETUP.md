@@ -2,7 +2,7 @@
 
 These steps take a fresh Windows computer from nothing to a running website. Mac and Linux notes are at the end. Plan for about 30 to 45 minutes, most of it downloads.
 
-You only need this guide if you want to **run the project on your own computer**. If your role is QA, test data or logo, you can do all your work in the browser (see `GETTING_STARTED.md`) and ask the lead for a link to the running site.
+You only need this guide if you want to **run the project on your own computer**. If your role is QA, test data or logo, you can do all your work in the browser and ask the lead for a link to the running site.
 
 ---
 
