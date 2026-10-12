@@ -97,7 +97,6 @@ docs                Product and engineering documentation
 - [Database and migrations](docs/database.md)
 - [Role-based access control](docs/rbac.md)
 - [Design system](docs/design-system.md)
-- [Team contribution plan](docs/CONTRIBUTION_PLAN.md)
 - [Setting up on a new computer, step by step](docs/SETUP.md)
 - [Getting started for teammates (no terminal needed)](docs/GETTING_STARTED.md)
 

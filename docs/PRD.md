@@ -193,7 +193,7 @@ A single Next.js application (a modular monolith) with shared packages for the d
 
 - **Manual verification by phone** is deliberate and does not scale forever. The queue, audit log and call notes make it manageable for an MVP.
 - **Payment gateway sandboxes** (eSewa, Khalti) can be slow to obtain, which is why COD comes first.
-- **Student team experience:** the architecture favours plain, well-named code and small tasks so new contributors can help (see `docs/CONTRIBUTION_PLAN.md`).
+- **Student team experience:** the architecture favours plain, well-named code and small tasks so new contributors can help.
 - Single currency (NPR) and domestic delivery only for the MVP.
 
 ---

@@ -23,7 +23,7 @@ On the repository page you will use these tabs:
 | **Issues**        | Bug reports and tasks. The QA person lives here.                          |
 | **Pull requests** | Proposed changes waiting for the lead to approve.                         |
 
-Start by reading **`docs/CONTRIBUTION_PLAN.md`**. It lists your role, your tasks and which folder is yours. Click the file, then read it on the page.
+Ask the lead for your role and tasks. Your work goes in the folder the lead gives you.
 
 **Please do not edit** anything inside the `apps` or `packages` folders, or any file that is not in your own folder. The lead looks after those.
 
