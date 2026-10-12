@@ -29,12 +29,16 @@ const LogoMark = ({ tone }: { tone: LogoTone }) => (
       className={tone === "dark" ? "text-white" : "text-primary"}
       stroke="currentColor"
       fill="none"
-      strokeWidth="24"
+      strokeWidth="12"
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <path d="M196 268 V176 Q196 142 232 142" />
-      <path d="M164 188 H234" />
+      <path d="M138 205 A62 62 0 0 1 196 143" />
+      <path d="M262 205 A62 62 0 0 1 204 267" />
+      <path d="M193 242 V195 Q193 175 215 175" strokeWidth="16" />
+      <path d="M176 200 H214" strokeWidth="16" />
+      <polygon points="194,131 216,143 194,155" fill="currentColor" />
+      <polygon points="206,255 184,267 206,279" fill="currentColor" />
     </g>
   </svg>
 );
